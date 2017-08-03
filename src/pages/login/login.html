@@ -1,0 +1,41 @@
+<ion-content scroll="false" class="content">
+  <div class="splash-bg"></div>
+  <div class="splash-info">
+    <div class="splash-logo"></div>
+    <div class="splash-intro">
+      Добро пожаловать в МКИСП
+    </div>
+  </div>
+  <div padding>
+
+    <ion-list>
+
+      <ion-item>
+        <ion-label fixed  class='fixedLabel'>Логин</ion-label>
+        <ion-input type="email" [(ngModel)]="account.email" name="email"></ion-input>
+      </ion-item>
+    
+      <ion-item>
+        <ion-label fixed  class='fixedLabel'>Пароль</ion-label>
+        <ion-input type="password" [(ngModel)]="account.password" name="password"></ion-input>
+      </ion-item>
+
+      <div padding>
+       
+      </div>
+
+    </ion-list>
+    
+  </div>
+</ion-content>
+
+  <ion-footer no-border>
+  <ion-navbar class="footerToolbar">
+    <button ion-button block item-right icon-left (click)="doLogin()">
+        <ion-icon name="person" style="color:white;font-size:26px;"></ion-icon>
+        <span style="font-weight: bold;color:white">Войти</span>
+    </button>
+
+  </ion-navbar>
+
+</ion-footer>

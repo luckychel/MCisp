@@ -4,10 +4,11 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 
-import { SettingsServiceProvider } from '../providers/settings-service/settings-service';
+import { SettingsServiceProvider } from '../providers/settings';
 
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
+import { LoginPage} from '../pages/login/login';
 
 declare var cordova: any;
 
@@ -25,23 +26,17 @@ export class MyApp {
        
     this.initializeApp();
 
-    
-    // used for an example of ngFor and navigation
-    this.pages = [
-      { title: 'Home', component: HomePage },
-      { title: 'List', component: ListPage }
-    ];
-
   }
+
   initializeApp() {
     this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
+        // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
 
       if (cordova.platformId == 'android') {
-          this.statusBar.backgroundColorByHexString("#9c0303");
+        this.statusBar.backgroundColorByHexString("#4d7198");
       } else {
-          this.statusBar.backgroundColorByName("red");
+          this.statusBar.backgroundColorByName("blue");
       }
 
       this.settingsService.openDatabase()
@@ -49,12 +44,25 @@ export class MyApp {
           this.splashScreen.hide();
         })
         .then(()=>{
-          
-          this.checkAuth()
-
-          this.rootPage = HomePage;
-        })
-        this.pushSetup();
+          this.checkAuth().then((res)=>{
+            
+            if (res) {
+              this.rootPage = LoginPage;
+            }
+            else
+            {
+              this.rootPage = HomePage;
+      
+              // used for an example of ngFor and navigation
+              this.pages = [
+                { title: 'Home', component: HomePage },
+                { title: 'List', component: ListPage }
+              ];
+              
+              this.pushSetup();
+            }
+          });
+        });
     });
   }
 
@@ -65,7 +73,10 @@ export class MyApp {
   }
 
   checkAuth(){
-    
+    return Promise.resolve(this.settingsService.getAll()
+      .then(settings => {
+        return settings["auth"] == "0";
+      }));
   }
   
   pushSetup(){
@@ -92,6 +103,7 @@ export class MyApp {
                 debugger;
                 alert(notification.message);
               } else {
+
                 //if user NOT using app and push notification comes
                 //TODO: Your logic on click of push notification directly
                 //this.nav.push(DetailsPage, { message: data.message });
@@ -102,11 +114,11 @@ export class MyApp {
         );
 
         pushObject.on('registration').subscribe((registration: any) => {
-          alert('Device registered' + registration.registrationId)
+          alert('Device registered = ' + registration.registrationId)
         });
 
         pushObject.on('error').subscribe(error => {
-          alert('Error with Push plugin' + error)
+          alert('Error with Push plugin ' + error)
         });
 
       } 
