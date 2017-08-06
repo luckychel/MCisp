@@ -4,7 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 
-import { SettingsServiceProvider } from '../providers/settings';
+import { Settings } from '../providers/settings';
 
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
@@ -22,7 +22,7 @@ export class MyApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public settingsService:SettingsServiceProvider, public push: Push) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public settings:Settings, public push: Push) {
        
     this.initializeApp();
 
@@ -39,7 +39,7 @@ export class MyApp {
           this.statusBar.backgroundColorByName("blue");
       }
 
-      this.settingsService.openDatabase()
+      this.settings.openDatabase()
         .then(() => {
           this.splashScreen.hide();
         })
@@ -73,9 +73,9 @@ export class MyApp {
   }
 
   checkAuth(){
-    return Promise.resolve(this.settingsService.getAll()
+    return Promise.resolve(this.settings.getAll()
       .then(settings => {
-        return settings["auth"] == "0";
+        return settings["auth"] == "0" || settings["rememberme"] == "false";
       }));
   }
   

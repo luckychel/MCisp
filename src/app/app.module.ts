@@ -11,7 +11,8 @@ import { LoginPage} from '../pages/login/login';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Push } from '@ionic-native/push';
-import { SettingsServiceProvider } from '../providers/settings';
+
+import { Settings } from '../providers/settings';
 import { Api } from '../providers/api';
 import { User } from '../providers/user';
 
@@ -39,7 +40,7 @@ import { User } from '../providers/user';
     SplashScreen,
     Push,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    SettingsServiceProvider,
+    Settings,
     Api,
     User
   ]

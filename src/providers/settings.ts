@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SQLite } from 'ionic-native';
 
 @Injectable()
-export class SettingsServiceProvider {
+export class Settings {
     db: SQLite = null;
 
     constructor() {
@@ -30,6 +30,7 @@ export class SettingsServiceProvider {
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ['email', '0']);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ['password', '0']);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ['mol_id', '0']);
+            this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ['rememberme', '0']);
             return Promise.all([]);
         }
       }
