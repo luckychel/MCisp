@@ -44,7 +44,8 @@ export class MyApp {
           this.splashScreen.hide();
         })
         .then(()=>{
-          this.checkAuth().then((res)=>{
+          debugger
+           return this.checkAuth().then((res)=>{
             
             if (res) {
               this.rootPage = LoginPage;
@@ -58,10 +59,11 @@ export class MyApp {
                 { title: 'Home', component: HomePage },
                 { title: 'List', component: ListPage }
               ];
-              
-              this.pushSetup();
             }
           });
+        }).then(()=>{
+          debugger
+           this.pushSetup();
         });
     });
   }
@@ -99,8 +101,8 @@ export class MyApp {
         const pushObject: PushObject = this.push.init(options);
 
         pushObject.on('notification').subscribe((notification: any) => {
+            debugger;
              if (notification.additionalData.foreground) {
-                debugger;
                 alert(notification.message);
               } else {
 
@@ -114,11 +116,11 @@ export class MyApp {
         );
 
         pushObject.on('registration').subscribe((registration: any) => {
-          alert('Device registered = ' + registration.registrationId)
+          console.log('Device registered = ' + registration.registrationId)
         });
 
         pushObject.on('error').subscribe(error => {
-          alert('Error with Push plugin ' + error)
+          console.log('Error with Push plugin ' + error)
         });
 
       } 

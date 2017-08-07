@@ -19,22 +19,12 @@ export class User {
   login(accountInfo: any) {
     let seq = this.api.post('auth', accountInfo).share();
 
-    seq
-      .map(res => 
-        {
-          return res.json()
-        }
-      )
+    seq.map(res => res.json())
       .subscribe(res => {
-        debugger
-        // If the API returned a successful response, mark the user as logged in
-        if (res.isAuth) {
-          this._loggedIn(res);
-        }
+        this._user = res;
       }, err => {
         console.error('ERROR', err);
       });
-
     return seq;
   }
 

@@ -11,8 +11,8 @@ import { User } from '../../providers/user';
 })
 export class LoginPage {
   account: { username: string, password: string } = {
-    username: '',
-    password: ''
+    username: "",
+    password: ""
   };
   rememberme: boolean = false;
   loader: any;
@@ -37,25 +37,43 @@ export class LoginPage {
 
    doLogin() {
     
-    if (!this.checkOnEmpty()) return;
+    if (!this.checkOnEmpty()) 
+      return;
+    
     this.showLoader();
-    this.user.login(this.account).subscribe((resp) => {
+
+    let us = this.user;
+
+    us.login(this.account).subscribe((res) => {
+      
       if (this.rememberme)
       {
-        this.settings.updateSettingsData({username:this.account.username});
-        this.settings.updateSettingsData({username:this.account.password});
-        this.settings.updateSettingsData({rememberme:this.rememberme});
+        this.settings.updateSettingsData({key:"username", value:us._user.username});
+        this.settings.updateSettingsData({key:"password", value:us._user.password});
+        this.settings.updateSettingsData({key:"auth", value:us._user.isAuth});
+        this.settings.updateSettingsData({key:"rememberme", value:us._user.rememberme});
       }
+      else
+      {
+        this.settings.updateSettingsData({key:"username", value:""});
+        this.settings.updateSettingsData({key:"password", value:""});
+        this.settings.updateSettingsData({key:"auth", value:"0"});
+        this.settings.updateSettingsData({key:"rememberme",  value:"0"});
+      }
+
       this.hideLoader();
-      this.navCtrl.setRoot(HomePage);
+
+      if (us._user.isAuth)
+      {
+         this.navCtrl.setRoot(HomePage);
+      }
+      else
+      {
+        this.showToastr(us._user.authError);
+      }
     }, (err) => {
-     this.hideLoader();
-     let toast = this.toastCtrl.create({
-        message: "Невозможно войти. Пожалуйста проверьте информацию о Вашей учетной записи и попробуйте войти еще раз.",
-        duration: 3000,
-        position: 'top'
-      });
-      toast.present();
+      this.hideLoader();
+      this.showToastr("Ошибка при входе");
     });
   }
 
@@ -67,12 +85,7 @@ export class LoginPage {
       err = "Заполните поле \"Пароль\"";
     if (err !== "")
     {
-      let toast = this.toastCtrl.create({
-        message: err,
-        duration: 3000,
-        position: 'top'
-      });
-      toast.present();
+      this.showToastr(err);
       return false;
     }
     else 
@@ -89,5 +102,14 @@ export class LoginPage {
     setTimeout(() => {
         this.loader.dismiss();
     });
+  }
+
+  showToastr(message){
+      let toast = this.toastCtrl.create({
+        message: message,
+        duration: 3000,
+        position: 'top'
+      });
+      toast.present();
   }
 }

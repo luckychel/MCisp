@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { HttpModule, Http } from '@angular/http';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-
+import { IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
+import { HeaderColor } from '@ionic-native/header-color';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
@@ -15,6 +15,7 @@ import { Push } from '@ionic-native/push';
 import { Settings } from '../providers/settings';
 import { Api } from '../providers/api';
 import { User } from '../providers/user';
+
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { User } from '../providers/user';
     StatusBar,
     SplashScreen,
     Push,
+    HeaderColor,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Settings,
     Api,
