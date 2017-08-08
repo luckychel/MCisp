@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, MenuController } from 'ionic-angular';
+import { NavController, MenuController } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
@@ -7,8 +7,8 @@ import { NavController, NavParams, MenuController } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController, public menuCtrl: MenuController, navParams: NavParams) {
-    console.log(navParams)
+  constructor(public navCtrl: NavController, public menuCtrl: MenuController) {
+
   }
   
   ionViewWillEnter() {

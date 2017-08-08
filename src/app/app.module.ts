@@ -7,6 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Push } from '@ionic-native/push';
 import { HeaderColor } from '@ionic-native/header-color';
+import { Badge } from '@ionic-native/badge';
 
 import { MyApp } from './app.component';
 
@@ -46,6 +47,7 @@ import { User } from '../providers/user';
     SplashScreen,
     Push,
     HeaderColor,
+    Badge,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Settings,
     Api,

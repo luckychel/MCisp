@@ -32,6 +32,7 @@ export class Settings {
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["mol_id", ""]);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["registration_id", ""]);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["rememberme", "false"]);
+            
             return Promise.all([]);
         }
       }

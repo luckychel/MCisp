@@ -14,7 +14,9 @@ export class LoginPage {
     username: "",
     password: ""
   };
+
   rememberme: boolean = false;
+  
   loader: any;
 
   constructor(public navCtrl: NavController,
@@ -49,7 +51,7 @@ export class LoginPage {
     us.login(this.account).subscribe((res) => {
       
       this.settings.updateSettingsData({key:"username", value:us._user.userName});
-debugger
+
       if (this.rememberme)
       {
         this.settings.updateSettingsData({key:"password", value:us._user.password});

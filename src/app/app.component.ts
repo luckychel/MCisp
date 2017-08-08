@@ -4,6 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { HeaderColor } from '@ionic-native/header-color';
+import { Badge } from '@ionic-native/badge';
 
 import { Settings } from '../providers/settings';
 
@@ -21,7 +22,7 @@ declare var cordova: any;
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;
+  rootPage: any = null;
 
   pages: Array<{title: string, component: any}>;
 
@@ -31,7 +32,8 @@ export class MyApp {
     private headerColor: HeaderColor, 
     public settings:Settings, 
     public push: Push, 
-    public alertCtrl: AlertController) 
+    public alertCtrl: AlertController,
+    private badge: Badge) 
     {
       //Наполнение меню
        this.pages = [
@@ -51,8 +53,10 @@ export class MyApp {
       if (cordova.platformId == 'android') {
         this.statusBar.backgroundColorByHexString("#4d7198");
       } else {
-          this.statusBar.backgroundColorByName("blue");
+        this.statusBar.backgroundColorByName("blue");
       }
+
+      this.badge.clear();
 
       this.settings.openDatabase()
         .then(() => {
@@ -63,9 +67,12 @@ export class MyApp {
         })
         .then(()=>{
            return this.checkAuth().then((res)=>{
-            
             if (!res) {
               this.rootPage = LoginPage;
+            }
+            else
+            {
+              this.rootPage = HomePage;
             }
           });
         });
@@ -106,12 +113,16 @@ export class MyApp {
 
         pushObject.on('notification').subscribe((notification: any) => {
             
-          pushObject.setApplicationIconBadgeNumber(10);
-
             if (notification.additionalData.foreground) {
               this.presentAlert(notification);
-            } else {
-              this.nav.push(HomePage, { 
+            } else { 
+              /* console.log("update badge count");
+              this.badge.increase(1);
+              this.settings.updateSettingsData({key:"badge_count", value:this.badge.get()});     */
+              
+             // this.presentAlert(notification);
+                this.nav.setRoot(MessagesPage);
+                this.nav.push(MessagePage, { 
                 item: {
                   name: notification.additionalData.name,
                   about: notification.additionalData.about, 
@@ -124,6 +135,7 @@ export class MyApp {
 
         pushObject.on('registration').subscribe((registration: any) => {
           this.settings.updateSettingsData({key:"registration_id", value:registration.registrationId});
+          console.log(registration.registrationId);
         });
 
         pushObject.on('error').subscribe(error => {
@@ -139,6 +151,7 @@ export class MyApp {
   }
 
   logout(){
+      this.settings.updateSettingsData({key:"auth", value:"false"});
       this.nav.setRoot(LoginPage);
   }
 
