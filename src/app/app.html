@@ -1,7 +1,7 @@
-<ion-menu [content]="content">
+<ion-menu [content]="content" side="left" id="mainmenu">
   <ion-header>
     <ion-toolbar>
-      <ion-title>Menu</ion-title>
+      <ion-title>Меню</ion-title>
     </ion-toolbar>
   </ion-header>
 
@@ -9,6 +9,9 @@
     <ion-list>
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
         {{p.title}}
+      </button>
+      <button ion-item (click)="logout()">
+         Выйти
       </button>
     </ion-list>
   </ion-content>

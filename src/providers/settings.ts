@@ -26,12 +26,12 @@ export class Settings {
 
         if(res.rows.length == 0) {
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["version", "1"]);
-            this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["auth", "0"]);
+            this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["auth", "false"]);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["username", ""]);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["password", ""]);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["mol_id", ""]);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["registration_id", ""]);
-            this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["rememberme", "0"]);
+            this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["rememberme", "false"]);
             return Promise.all([]);
         }
       }

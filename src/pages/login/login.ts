@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ToastController, LoadingController } from 'ionic-angular';
+import { NavController, ToastController, LoadingController, MenuController } from 'ionic-angular';
 
 import { HomePage } from '../home/home';
 import { Settings } from '../../providers/settings';
@@ -21,18 +21,20 @@ export class LoginPage {
     public user: User,
     public settings: Settings,
     public toastCtrl: ToastController,
-    public loadingCtrl: LoadingController) {
+    public loadingCtrl: LoadingController, 
+    public menuCtrl: MenuController) {
+      
+    }
 
+  ionViewWillEnter() {
+    this.menuCtrl.enable(false, 'mainmenu');
+   
     this.settings.getAll()
       .then(settings => {
         this.account.username = settings["username"];
         this.account.password = settings["password"];
         this.rememberme = settings["rememberme"];
       });
-  }
-
-  ionViewDidLoad() {
-    //console.log('ionViewDidLoad LoginPage');
   }
 
    doLogin() {
@@ -46,19 +48,19 @@ export class LoginPage {
 
     us.login(this.account).subscribe((res) => {
       
+      this.settings.updateSettingsData({key:"username", value:us._user.userName});
+debugger
       if (this.rememberme)
       {
-        this.settings.updateSettingsData({key:"username", value:us._user.username});
         this.settings.updateSettingsData({key:"password", value:us._user.password});
         this.settings.updateSettingsData({key:"auth", value:us._user.isAuth});
-        this.settings.updateSettingsData({key:"rememberme", value:us._user.rememberme});
+        this.settings.updateSettingsData({key:"rememberme", value:this.rememberme});
       }
       else
       {
-        this.settings.updateSettingsData({key:"username", value:""});
-        this.settings.updateSettingsData({key:"password", value:""});
-        this.settings.updateSettingsData({key:"auth", value:"0"});
-        this.settings.updateSettingsData({key:"rememberme",  value:"0"});
+        this.settings.updateSettingsData({key:"password", value:null});
+        this.settings.updateSettingsData({key:"auth", value:"false"});
+        this.settings.updateSettingsData({key:"rememberme", value:"false"});
       }
 
       this.hideLoader();
