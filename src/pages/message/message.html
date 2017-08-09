@@ -1,17 +1,26 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{ item.name }}</ion-title>
+    <ion-title>{{ item.title }}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
-<ion-content>
-  <div class="item-profile" text-center #profilePic [style.background-image]="'url(' + item.profilePic + ')'">
-  </div>
-
-  <div class="item-detail" padding>
-    <h2>{{item.name}}</h2>
-    <p>{{item.about}}</p>
-  </div>
+<ion-content class="content">
+  <ion-card class="item-profile">
+     <ion-card-header style="background-color: #f1f1f1;">
+      <div>
+        <strong>Тема: </strong>
+        <span>{{item.title}}</span>
+      </div>
+      <div>
+        <strong>Дата: </strong>
+        <span>{{item.d_ADD | date: 'dd.MM.yyyy H:mm'}}</span>
+      </div>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <h2 style="padding-top:10px;">{{item.body}}</h2>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

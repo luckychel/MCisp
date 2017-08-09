@@ -30,8 +30,8 @@ export class Settings {
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["username", ""]);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["password", ""]);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["mol_id", ""]);
-            this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["registration_id", ""]);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["rememberme", "false"]);
+            this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["registration_id", ""]);
             
             return Promise.all([]);
         }
@@ -42,7 +42,14 @@ export class Settings {
   getVersion(){
     return this.db.executeSql('SELECT * FROM CispSettings WHERE key=?', ['version'])
         .then( response => {
-          return response.rows.item(0).value;
+          return Promise.resolve(response.rows.item(0).value);
+        });
+  }
+
+  getValue(key){
+     return this.db.executeSql('SELECT * FROM CispSettings WHERE key=?', [key])
+        .then( response => {
+          return Promise.resolve(response.rows.item(0).value);
         });
   }
 

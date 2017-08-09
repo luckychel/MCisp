@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
  */
 @Injectable()
 export class Api {
-  url: string = 'http://services.ssnab.ru:8010/api/';
+  url: string = 'http://services.ssnab.ru:8010/api';
 
   constructor(public http: Http) {
   }
@@ -27,7 +27,6 @@ export class Api {
       // a search field set in options.
       options.search = !options.search && p || options.search;
     }
-
     return this.http.get(this.url + '/' + endpoint, options);
   }
 

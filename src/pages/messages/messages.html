@@ -8,25 +8,41 @@
 </ion-header>
 
 <ion-content>
-<ion-list>
-    <ion-item-sliding *ngFor="let item of items">
-      <button ion-item (click)="openItem(item)">
-        <ion-avatar item-start>
-          <img [src]="item.profilePic" />
-        </ion-avatar>
-        <h2>{{item.name}}</h2>
-        <p>{{item.about}}</p>
-        <ion-note item-end *ngIf="item.note">{{item.note}}</ion-note>
-      </button>
 
-    <!-- для операция над сообщениями
-        <ion-item-options>
-        <button ion-button color="danger" (click)="deleteItem(item)">
-          {{ 'DELETE_BUTTON' | translate }}
-        </button>
+
+<ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Проведи вниз для обновления"
+      refreshingSpinner="circles"
+      refreshingText="Обновляется...">
+    </ion-refresher-content>
+  </ion-refresher>
+    
+<ion-list>
+    <ion-item-sliding *ngFor="let item of items" (ionSwipe)="setdelete(item, slidingItem)" #slidingItem>
+      <button ion-item (click)="openItem(item)">
+       <!--  <ion-avatar item-start>
+          <img [src]="item.profilePic" />
+        </ion-avatar> -->
+        <h2 [ngClass]="{'cbold': !item.iS_READ}">{{item.title}}</h2>
+        <p [ngClass]="{'cbold': !item.iS_READ}">{{item.body}}</p>
+        <ion-note [ngClass]="{'cbold': !item.iS_READ}" item-end style="font-size:9px;">{{item.d_ADD | date: 'dd.MM.yyyy H:mm'}}</ion-note>
+      </button>
+      
+      <ion-item-options side="left" *ngIf="!item.iS_READ">
+        <button ion-button color="success" (click)="setread(item, slidingItem)">Прочтено</button>
+      </ion-item-options>
+      
+      <!-- <ion-item-options side="left" *ngIf="item.iS_READ">
+        <button ion-button (click)="setunread(item, slidingItem)">Не прочтено</button>
       </ion-item-options> -->
+
+      <ion-item-options side="right">
+        <button ion-button color="danger" (click)="setdelete(item, slidingItem)">Удалить</button>
+      </ion-item-options>
+
     </ion-item-sliding>
   </ion-list>
-  
-  {{notification}}
+
 </ion-content>

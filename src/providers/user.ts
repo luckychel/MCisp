@@ -41,4 +41,14 @@ export class User {
   _loggedIn(resp) {
     this._user = resp.user;
   }
+
+  registration(userInfo: any){
+    let seq = this.api.post('mols/registration', userInfo).share();
+
+    seq.map(res => res.json())
+      .subscribe(res => {
+        return res;
+      });
+    return seq;
+  }
 }

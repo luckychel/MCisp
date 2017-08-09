@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, MenuController } from 'ionic-angular';
 import { MessagePage } from '../message/message';
 import { Item } from '../../models/item';
+
+import { Api } from '../../providers/api';
+import { Settings } from '../../providers/settings';
 
 @Component({
   selector: 'page-messages',
@@ -10,9 +13,12 @@ import { Item } from '../../models/item';
 export class MessagesPage {
 
   items: Item[] = [];
-  notification: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public menuCtrl: MenuController, 
+    public settings: Settings, 
+    public api: Api) {
 
    /*  debugger
     this.items = [
@@ -31,11 +37,83 @@ export class MessagesPage {
  */
   }
 
+  getData(){
+    this.items = [];
+    this.settings.getValue("mol_id")
+        .then((res) => {
+            this.api.get("messages/" + res)
+              .map(res => {
+                return res.json()
+              })
+              .subscribe((res)=>{
+                if (res !== undefined && res.length > 0)
+                {
+                  for (let item of res) {
+                    this.items.push(item);
+                  }
+                }
+              });
+      });
+  }
+
+  ionViewWillEnter() {
+    this.menuCtrl.enable(true, 'mainmenu');
+    this.getData();
+  }
+
+   doRefresh(refresher) {
+    setTimeout(() => {
+      this.getData();
+      refresher.complete();
+    }, 2000);
+  }
+
   openItem(item) {
+    this.setread(item, undefined);
     this.navCtrl.push(MessagePage, {
       item: item
     });
   }
 
+  setread(p, slidingItem) {
+    if (slidingItem !== undefined) {
+      slidingItem.close();
+    }     
+
+    this.api.post("messages/setread", {ID: p.id})
+      .map(res => {
+        return res.json()
+      })
+      .subscribe((res)=>{
+          for (var i = 0; i< this.items.length; i++) {
+            if (this.items[i]["id"] == p.id)
+            {
+              this.items[i]["iS_READ"] = "true";
+              break;  
+            }
+          }
+      });
+  }
+
+  setunread(p,slidingItem ){
+
+  }
+
+  setdelete(p, slidingItem) {
+    slidingItem.close();
+    this.api.post("messages/setdelete", {ID: p.id})
+      .map(res => {
+        return res.json()
+      })
+      .subscribe((res)=>{
+          for (var i = 0; i< this.items.length; i++) {
+            if (this.items[i]["id"] == p.id)
+            {
+              this.items.splice(i, 1);
+              break;  
+            }
+          }
+      });
+  }
 }
 

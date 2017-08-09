@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ToastController, LoadingController, MenuController } from 'ionic-angular';
+import { Platform, NavController, ToastController, LoadingController, MenuController } from 'ionic-angular';
 
 import { HomePage } from '../home/home';
 import { Settings } from '../../providers/settings';
@@ -16,15 +16,17 @@ export class LoginPage {
   };
 
   rememberme: boolean = false;
-  
+  registration_id: string = "";
   loader: any;
 
-  constructor(public navCtrl: NavController,
+  constructor(public platform: Platform,
+    public navCtrl: NavController,
     public user: User,
     public settings: Settings,
     public toastCtrl: ToastController,
     public loadingCtrl: LoadingController, 
-    public menuCtrl: MenuController) {
+    public menuCtrl: MenuController
+    ) {
       
     }
 
@@ -36,6 +38,7 @@ export class LoginPage {
         this.account.username = settings["username"];
         this.account.password = settings["password"];
         this.rememberme = settings["rememberme"];
+        this.registration_id = settings["registration_id"];
       });
   }
 
@@ -51,6 +54,7 @@ export class LoginPage {
     us.login(this.account).subscribe((res) => {
       
       this.settings.updateSettingsData({key:"username", value:us._user.userName});
+      this.settings.updateSettingsData({key:"mol_id", value:us._user.molId})
 
       if (this.rememberme)
       {
@@ -67,14 +71,19 @@ export class LoginPage {
 
       this.hideLoader();
 
-      if (us._user.isAuth)
-      {
-         this.navCtrl.setRoot(HomePage);
+      if (us._user.isAuth) {
+        us.registration({
+          MOL_ID: us._user.molId,
+          REGISTRATION_ID: this.registration_id,
+          MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
+        }).subscribe((res) => {
+          this.navCtrl.setRoot(HomePage);
+        });
       }
-      else
-      {
+      else {
         this.showToastr(us._user.authError);
       }
+
     }, (err) => {
       this.hideLoader();
       this.showToastr("Ошибка при входе");

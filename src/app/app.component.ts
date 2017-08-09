@@ -1,20 +1,21 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, AlertController} from 'ionic-angular';
+import { Nav, Platform, AlertController, LoadingController} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { HeaderColor } from '@ionic-native/header-color';
 import { Badge } from '@ionic-native/badge';
 
-import { Settings } from '../providers/settings';
-
 import { LoginPage} from '../pages/login/login';
 import { HomePage } from '../pages/home/home';
 import { MessagesPage } from '../pages/messages/messages';
 import { MessagePage } from '../pages/message/message';
 
+import { Api } from '../providers/api';
+import { Settings } from '../providers/settings';
 
-declare var cordova: any;
+
+//declare var cordova: any;
 
 @Component({
   templateUrl: 'app.html'
@@ -23,17 +24,20 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any = null;
-
+  loader: any;
   pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform, 
     public statusBar: StatusBar, 
     public splashScreen: SplashScreen, 
-    private headerColor: HeaderColor, 
+    public headerColor: HeaderColor, 
     public settings:Settings, 
     public push: Push, 
     public alertCtrl: AlertController,
-    private badge: Badge) 
+    public loadingCtrl: LoadingController, 
+    public badge: Badge,
+    public api: Api) 
+    
     {
       //Наполнение меню
        this.pages = [
@@ -50,13 +54,13 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.headerColor.tint('#4d7198');
 
-      if (cordova.platformId == 'android') {
+      if (this.platform.is('android')) {
         this.statusBar.backgroundColorByHexString("#4d7198");
-      } else {
+      } else { //ios
         this.statusBar.backgroundColorByName("blue");
       }
 
-      this.badge.clear();
+      //this.badge.clear();
 
       this.settings.openDatabase()
         .then(() => {
@@ -116,17 +120,13 @@ export class MyApp {
             if (notification.additionalData.foreground) {
               this.presentAlert(notification);
             } else { 
-              /* console.log("update badge count");
-              this.badge.increase(1);
-              this.settings.updateSettingsData({key:"badge_count", value:this.badge.get()});     */
-              
-             // this.presentAlert(notification);
                 this.nav.setRoot(MessagesPage);
                 this.nav.push(MessagePage, { 
                 item: {
-                  name: notification.additionalData.name,
-                  about: notification.additionalData.about, 
-                  profilePic: notification.additionalData.profilePic
+                  id: notification.additionalData.id,
+                  title: notification.additionalData.title, 
+                  body: notification.additionalData.body, 
+                  d_ADD: notification.additionalData.d_add
                 } 
               });
             }
@@ -152,7 +152,13 @@ export class MyApp {
 
   logout(){
       this.settings.updateSettingsData({key:"auth", value:"false"});
-      this.nav.setRoot(LoginPage);
+      this.settings.getValue("registration_id")
+        .then((res) => {
+            this.api.post("mols/unregistration", {REGISTRATION_ID : res})
+              .subscribe(()=>{
+                this.nav.setRoot(LoginPage);
+              });
+      });
   }
 
   presentAlert(msg) {
@@ -176,5 +182,16 @@ export class MyApp {
     ]
     });
     alert.present();
+  }
+  showLoader(){
+    this.loader = this.loadingCtrl.create({
+      content: 'Пожалуйста подождите...'
+    });
+    this.loader.present();
+  }
+  hideLoader(){
+    setTimeout(() => {
+        this.loader.dismiss();
+    });
   }
 }
