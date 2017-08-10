@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, MenuController } from 'ionic-angular';
+import { NavController, AlertController, NavParams, MenuController } from 'ionic-angular';
 import { MessagePage } from '../message/message';
 import { Item } from '../../models/item';
 
@@ -17,6 +17,7 @@ export class MessagesPage {
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
     public menuCtrl: MenuController, 
+    public alertCtrl: AlertController,
     public settings: Settings, 
     public api: Api) {
 
@@ -95,25 +96,44 @@ export class MessagesPage {
       });
   }
 
-  setunread(p,slidingItem ){
-
-  }
-
   setdelete(p, slidingItem) {
-    slidingItem.close();
-    this.api.post("messages/setdelete", {ID: p.id})
-      .map(res => {
-        return res.json()
-      })
-      .subscribe((res)=>{
-          for (var i = 0; i< this.items.length; i++) {
-            if (this.items[i]["id"] == p.id)
-            {
-              this.items.splice(i, 1);
-              break;  
-            }
+
+    
+    let alert = this.alertCtrl.create({
+      title: "Предупреждение",
+      message: "Удалить сообщение?",
+      buttons: [
+        {
+          text: "OK",
+          handler: () => {
+            slidingItem.close();
+            this.api.post("messages/setdelete", {ID: p.id})
+              .map(res => {
+                return res.json()
+              })
+              .subscribe((res)=>{
+                  for (var i = 0; i< this.items.length; i++) {
+                    if (this.items[i]["id"] == p.id)
+                    {
+                      this.items.splice(i, 1);
+                      break;  
+                    }
+                  }
+              });
           }
-      });
+        },
+        {
+          text: "Отмена",
+          role: 'cancel',
+          handler: () => {
+            slidingItem.close();
+          }
+        }
+      ]
+    });
+    alert.present();
+    
   }
+
 }
 
