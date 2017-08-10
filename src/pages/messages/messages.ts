@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, NavParams, MenuController } from 'ionic-angular';
+import { NavController, AlertController, NavParams, MenuController, LoadingController } from 'ionic-angular';
 import { MessagePage } from '../message/message';
 import { Item } from '../../models/item';
 
 import { Api } from '../../providers/api';
 import { Settings } from '../../providers/settings';
+import { BadgeProvider } from '../../providers/badge';
 
 @Component({
   selector: 'page-messages',
@@ -13,32 +14,20 @@ import { Settings } from '../../providers/settings';
 export class MessagesPage {
 
   items: Item[] = [];
+  loader: any;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
     public menuCtrl: MenuController, 
     public alertCtrl: AlertController,
+    public loadingCtrl: LoadingController, 
     public settings: Settings, 
-    public api: Api) {
-
-   /*  debugger
-    this.items = [
-      new Item("Burt Bear", "assets/img/speakers/bear.jpg", "Burt is a Bear."),
-      new Item("Charlie Cheetah", "assets/img/speakers/cheetah.jpg", "Charlie is a Cheetah."),
-      new Item("Donald Duck", "assets/img/speakers/duck.jpg", "Donald is a Duck."),
-      new Item("Eva Eagle", "assets/img/speakers/eagle.jpg", "Eva is an Eagle."),
-      new Item("Ellie Elephant", "assets/img/speakers/elephant.jpg", "Ellie is an Elephant."),
-      new Item("Molly Mouse", "assets/img/speakers/mouse.jpg", "Molly is a Mouse."),
-      new Item("Paul Puppy", "assets/img/speakers/puppy.jpg", "Paul is a Puppy.")
-    ];
-
-    for (let item of this.items) {
-      this.items.push(item);
-    }
- */
+    public api: Api, 
+    public badgeProvider: BadgeProvider) {
   }
 
   getData(){
+    this.showLoader()
     this.items = [];
     this.settings.getValue("mol_id")
         .then((res) => {
@@ -53,6 +42,9 @@ export class MessagesPage {
                     this.items.push(item);
                   }
                 }
+                this.hideLoader();
+              }, (err) =>{
+                this.hideLoader();
               });
       });
   }
@@ -90,6 +82,7 @@ export class MessagesPage {
             if (this.items[i]["id"] == p.id)
             {
               this.items[i]["iS_READ"] = "true";
+              this.badgeProvider.unread();
               break;  
             }
           }
@@ -97,8 +90,6 @@ export class MessagesPage {
   }
 
   setdelete(p, slidingItem) {
-
-    
     let alert = this.alertCtrl.create({
       title: "Предупреждение",
       message: "Удалить сообщение?",
@@ -116,6 +107,7 @@ export class MessagesPage {
                     if (this.items[i]["id"] == p.id)
                     {
                       this.items.splice(i, 1);
+                      this.badgeProvider.unread();
                       break;  
                     }
                   }
@@ -132,8 +124,18 @@ export class MessagesPage {
       ]
     });
     alert.present();
-    
   }
 
+  showLoader(){
+    this.loader = this.loadingCtrl.create({
+      content: 'Пожалуйста подождите...'
+    });
+    this.loader.present();
+  }
+  hideLoader(){
+    setTimeout(() => {
+        this.loader.dismiss();
+    });
+  }
 }
 

@@ -19,7 +19,6 @@ export class Settings {
       return Promise.all([table]);
       
     }).then(() => {
-
         return this.db.executeSql('SELECT * FROM CispSettings', []);
       }
     ).then((res) => {
@@ -32,7 +31,7 @@ export class Settings {
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["mol_id", ""]);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["rememberme", "false"]);
             this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["registration_id", ""]);
-            
+            this.db.executeSql("INSERT INTO CispSettings (key, value) VALUES (?, ?)", ["server_key", ""]);
             return Promise.all([]);
         }
       }

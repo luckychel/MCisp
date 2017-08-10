@@ -4,7 +4,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { HeaderColor } from '@ionic-native/header-color';
-import { Badge } from '@ionic-native/badge';
 
 import { LoginPage} from '../pages/login/login';
 import { HomePage } from '../pages/home/home';
@@ -13,9 +12,7 @@ import { MessagePage } from '../pages/message/message';
 
 import { Api } from '../providers/api';
 import { Settings } from '../providers/settings';
-
-
-//declare var cordova: any;
+import { BadgeProvider } from '../providers/badge';
 
 @Component({
   templateUrl: 'app.html'
@@ -35,8 +32,8 @@ export class MyApp {
     public push: Push, 
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController, 
-    public badge: Badge,
-    public api: Api) 
+    public api: Api,
+    public badgeProvider: BadgeProvider)
     
     {
       //Наполнение меню
@@ -117,17 +114,16 @@ export class MyApp {
 
         pushObject.on('notification').subscribe((notification: any) => {
             
-            if (notification.additionalData.foreground) {
-              this.presentAlert(notification);
-            } else { 
-                this.nav.setRoot(MessagesPage);
-                this.nav.push(MessagePage, { 
-                item: {
-                  id: notification.additionalData.id,
-                  title: notification.additionalData.title, 
-                  body: notification.additionalData.body, 
-                  d_ADD: notification.additionalData.d_add
-                } 
+            //прочтено
+            if (notification.additionalData.msgId != null)
+            {
+              this.api.post("messages/setread", {ID: notification.additionalData.msgId})
+              .subscribe((res)=>{
+                if (notification.additionalData.foreground) {
+                  this.presentAlert(notification);
+                } else { 
+                  this.goToMessages(notification);
+                }
               });
             }
           }
@@ -135,19 +131,30 @@ export class MyApp {
 
         pushObject.on('registration').subscribe((registration: any) => {
           this.settings.updateSettingsData({key:"registration_id", value:registration.registrationId});
-          console.log(registration.registrationId);
+          //console.log(registration.registrationId);
         });
 
         pushObject.on('error').subscribe(error => {
-          console.log('Error with Push plugin ' + error)
+          alert('Error with Push plugin ' + error)
         });
 
       } 
       else {
-        console.log('We do not have permission to send push notifications');
+        alert('We do not have permission to send push notifications');
       }
-
     });
+  }
+
+  goToMessages(notification){
+    this.nav.setRoot(MessagesPage);
+    this.nav.push(MessagePage, { 
+    item: {
+      id: notification.additionalData.msgId,
+      title: notification.additionalData.msgTitle, 
+      body: notification.additionalData.msgBody, 
+      d_ADD: notification.additionalData.msgDAdd
+    } 
+  });
   }
 
   logout(){
@@ -161,28 +168,29 @@ export class MyApp {
       });
   }
 
-  presentAlert(msg) {
+  presentAlert(notification) {
     let alert = this.alertCtrl.create({
-      title: msg.title,
-      subTitle: msg.message,
+      title: notification.title,
+      subTitle: notification.message,
       buttons: [
       {
         text: 'OK',
         role: 'cancel',
         handler: () => {
-          console.log('Cancel clicked');
+          this.badgeProvider.unread();
         }
       },
       {
         text: 'Подробнее',
         handler: () => {
-          console.log('Подробнее clicked');
+          this.goToMessages(notification);
         }
       }
     ]
     });
     alert.present();
   }
+
   showLoader(){
     this.loader = this.loadingCtrl.create({
       content: 'Пожалуйста подождите...'

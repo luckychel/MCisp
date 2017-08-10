@@ -19,6 +19,7 @@ import { MessagePage } from '../pages/message/message';
 import { Settings } from '../providers/settings';
 import { Api } from '../providers/api';
 import { User } from '../providers/user';
+import { BadgeProvider } from '../providers/badge';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { User } from '../providers/user';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Settings,
     Api,
-    User
+    User,
+    BadgeProvider
   ]
 })
 export class AppModule {}
