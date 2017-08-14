@@ -25,12 +25,12 @@
        <!--  <ion-avatar item-start>
           <img [src]="item.profilePic" />
         </ion-avatar> -->
-        <h2 [ngClass]="{'cbold': !item.iS_READ}">{{item.title}}</h2>
-        <p [ngClass]="{'cbold': !item.iS_READ}">{{item.body}}</p>
-        <ion-note [ngClass]="{'cbold': !item.iS_READ}" item-end style="font-size:9px;">{{item.d_ADD | date: 'dd.MM.yyyy H:mm'}}</ion-note>
+        <h2 [ngClass]="{'cbold': item.d_READ == null}">{{item.title}}</h2>
+        <p [ngClass]="{'cbold': item.d_READ == null}">{{item.body}}</p>
+        <ion-note [ngClass]="{'cbold': item.d_READ == null}" item-end style="font-size:9px;">{{item.d_ADD | date: 'dd.MM.yyyy H:mm'}}</ion-note>
       </button>
       
-      <ion-item-options side="left" *ngIf="!item.iS_READ">
+      <ion-item-options side="left" *ngIf="item.d_READ == null">
         <button ion-button color="success" (click)="setread(item, slidingItem)">Прочтено</button>
       </ion-item-options>
       

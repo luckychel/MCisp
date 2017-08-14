@@ -113,11 +113,11 @@ export class MyApp {
         const pushObject: PushObject = this.push.init(options);
 
         pushObject.on('notification').subscribe((notification: any) => {
-            
+
             //прочтено
             if (notification.additionalData.msgId != null)
             {
-              this.api.post("messages/setread", {ID: notification.additionalData.msgId})
+              this.api.post("messages/setread", {MESSAGE_ID: notification.additionalData.msgId})
               .subscribe((res)=>{
                 if (notification.additionalData.foreground) {
                   this.presentAlert(notification);

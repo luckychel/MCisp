@@ -43,18 +43,16 @@ export class LoginPage {
   }
 
    doLogin() {
-     debugger
+
     if (!this.checkOnEmpty()) 
       return;
-    debugger
 
     this.showLoader();
 
     let us = this.user;
-    debugger
 
     us.login(this.account).subscribe((res) => {
-      debugger
+
       this.settings.updateSettingsData({key:"username", value:us._user.userName});
       this.settings.updateSettingsData({key:"mol_id", value:us._user.molId})
 

@@ -36,6 +36,7 @@ export class MessagesPage {
                 return res.json()
               })
               .subscribe((res)=>{
+                debugger
                 if (res !== undefined && res.length > 0)
                 {
                   for (let item of res) {
@@ -73,15 +74,15 @@ export class MessagesPage {
       slidingItem.close();
     }     
 
-    this.api.post("messages/setread", {ID: p.id})
+    this.api.post("messages/setread", {MESSAGE_ID: p.messagE_ID})
       .map(res => {
         return res.json()
       })
       .subscribe((res)=>{
           for (var i = 0; i< this.items.length; i++) {
-            if (this.items[i]["id"] == p.id)
+            if (this.items[i]["messagE_ID"] == p.messagE_ID)
             {
-              this.items[i]["iS_READ"] = "true";
+              this.items[i]["d_READ"] = new Date().getDate();
               this.badgeProvider.unread();
               break;  
             }
@@ -98,13 +99,13 @@ export class MessagesPage {
           text: "OK",
           handler: () => {
             slidingItem.close();
-            this.api.post("messages/setdelete", {ID: p.id})
+            this.api.post("messages/setdelete", {MESSAGE_ID: p.messagE_ID})
               .map(res => {
                 return res.json()
               })
               .subscribe((res)=>{
                   for (var i = 0; i< this.items.length; i++) {
-                    if (this.items[i]["id"] == p.id)
+                    if (this.items[i]["messagE_ID"] == p.messagE_ID)
                     {
                       this.items.splice(i, 1);
                       this.badgeProvider.unread();
