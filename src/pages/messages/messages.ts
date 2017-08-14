@@ -36,7 +36,6 @@ export class MessagesPage {
                 return res.json()
               })
               .subscribe((res)=>{
-                debugger
                 if (res !== undefined && res.length > 0)
                 {
                   for (let item of res) {

@@ -19,7 +19,6 @@ export class BadgeProvider {
         .then((mol_id) => {
           this.api.get('messages/unread/' + mol_id)
             .subscribe(res => {
-              debugger
                 this.badge.set(res.json());
             }, err => {
               console.error('ERROR', err);
