@@ -1,8 +1,8 @@
 {
     "name": "MCisp",
-    "version": "0.0.2",
+    "version": "0.0.1",
     "author": "Отдел разработки Союзнаб",
-    "homepage": "http://ionicframework.com/",
+    "homepage": "http://ssnab.ru/",
     "private": true,
     "scripts": {
         "clean": "ionic-app-scripts clean",
