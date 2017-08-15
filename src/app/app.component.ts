@@ -23,6 +23,7 @@ export class MyApp {
   rootPage: any = null;
   loader: any;
   pages: Array<{title: string, component: any}>;
+  registrationId: any;
 
   constructor(public platform: Platform, 
     public statusBar: StatusBar, 
@@ -130,7 +131,8 @@ export class MyApp {
         );
 
         pushObject.on('registration').subscribe((registration: any) => {
-          this.settings.updateSettingsData({key:"registration_id", value:registration.registrationId});
+          this.settings.updateSettingsData({key:"registration_id", value: registration.registrationId});
+          this.registrationId = registration.registrationId;
           //console.log(registration.registrationId);
         });
 
@@ -186,7 +188,8 @@ export class MyApp {
           this.goToMessages(notification);
         }
       }
-    ]
+    ],
+    cssClass: 'alertCustomCss'
     });
     alert.present();
   }
