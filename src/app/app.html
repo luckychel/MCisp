@@ -9,7 +9,7 @@
     <ion-list>
       <button menuClose icon-end ion-item *ngFor="let p of pages" (click)="openPage(p)" style="position:relative;">
         {{p.title}}
-        <ion-icon *ngIf="p.component.name == 'MessagesPage'" name="md-bulb" style="position:absolute;top:14px;right:10px;color:red" [ngClass]="{'registraionIdTrue': registrationId != null}" ></ion-icon>
+        <ion-icon *ngIf="p.component.name == 'MessagesPage'" name="md-bulb" style="position:absolute;top:12px;right:30px;color:red" [ngClass]="{'registraionIdTrue': registrationId != null}" ></ion-icon>
       </button>
       <button ion-item (click)="logout()">
          Выйти

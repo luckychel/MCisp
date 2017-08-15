@@ -28,13 +28,14 @@
         "@ionic-native/status-bar": "3.12.1",
         "@ionic/storage": "2.0.1",
         "cordova-android": "^6.2.3",
+        "cordova-ios": "^4.4.0",
         "cordova-plugin-badge": "^0.8.1",
-        "cordova-plugin-console": "^1.0.5",
-        "cordova-plugin-device": "^1.1.4",
+        "cordova-plugin-console": "^1.0.7",
+        "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-headercolor": "^1.0.0",
         "cordova-plugin-splashscreen": "^4.0.3",
-        "cordova-plugin-statusbar": "^2.2.2",
-        "cordova-plugin-whitelist": "^1.3.1",
+        "cordova-plugin-statusbar": "^2.2.3",
+        "cordova-plugin-whitelist": "^1.3.2",
         "cordova-sqlite-storage": "^2.0.4",
         "ionic-angular": "3.6.0",
         "ionic-native": "^2.9.0",
@@ -67,7 +68,8 @@
             "cordova-plugin-badge": {}
         },
         "platforms": [
-            "android"
+            "android",
+            "ios"
         ]
     }
 }
