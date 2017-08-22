@@ -83,10 +83,9 @@ export class LoginPage {
       else {
         this.showToastr(us._user.authError);
       }
-
     }, (err) => {
       this.hideLoader();
-      this.showToastr("Ошибка авторизации!");
+      this.showToastr("Ошибка авторизации! " + err);
     });
   }
 

@@ -19,7 +19,7 @@ export class MessagePage {
   }
 
   ionViewWillEnter() {
-    this.badgeProvider.unread();
+    this.badgeProvider.update();
   }
 
 }

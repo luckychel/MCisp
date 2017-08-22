@@ -1,6 +1,7 @@
 <ion-header>
   <ion-navbar>
     <button ion-button menuToggle>
+      <img *ngIf="unread>0" src="assets/img/unread_messages.png" style="position: absolute; top:6px; left:8px; "/>
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Сообщения</ion-title>
@@ -22,9 +23,6 @@
 <ion-list>
     <ion-item-sliding *ngFor="let item of items" (ionSwipe)="setdelete(item, slidingItem)" #slidingItem>
       <button ion-item (click)="openItem(item)">
-       <!--  <ion-avatar item-start>
-          <img [src]="item.profilePic" />
-        </ion-avatar> -->
         <h2 [ngClass]="{'cbold': item.d_READ == null}">{{item.title}}</h2>
         <p [ngClass]="{'cbold': item.d_READ == null}">{{item.body}}</p>
         <ion-note [ngClass]="{'cbold': item.d_READ == null}" item-end style="font-size:9px;">{{item.d_ADD | date: 'dd.MM.yyyy H:mm'}}</ion-note>

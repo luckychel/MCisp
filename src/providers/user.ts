@@ -12,10 +12,6 @@ export class User {
   constructor(public http: Http, public api: Api) {
   }
 
-  /**
-   * Send a POST request to our login endpoint with the data
-   * the user entered on the form.
-   */
   login(accountInfo: any) {
     let seq = this.api.post('auth', accountInfo).share();
 
@@ -28,16 +24,10 @@ export class User {
     return seq;
   }
 
-  /**
-   * Log the user out, which forgets the session
-   */
   logout() {
     this._user = null;
   }
 
-  /**
-   * Process a login/signup response to store user data
-   */
   _loggedIn(resp) {
     this._user = resp.user;
   }

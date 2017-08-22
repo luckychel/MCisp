@@ -4,6 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { HeaderColor } from '@ionic-native/header-color';
+import { Storage } from '@ionic/storage';
 
 import { LoginPage} from '../pages/login/login';
 import { HomePage } from '../pages/home/home';
@@ -23,7 +24,11 @@ export class MyApp {
   rootPage: any = null;
   loader: any;
   pages: Array<{title: string, component: any}>;
+
   registrationId: any;
+  login = {
+    exprireDate: ""
+  };
 
   constructor(public platform: Platform, 
     public statusBar: StatusBar, 
@@ -34,7 +39,8 @@ export class MyApp {
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController, 
     public api: Api,
-    public badgeProvider: BadgeProvider)
+    public badgeProvider: BadgeProvider,
+    private storage: Storage)
     
     {
       //Наполнение меню
@@ -57,8 +63,34 @@ export class MyApp {
       } else { //ios
         this.statusBar.backgroundColorByName("blue");
       }
+      
+     // this.storage.set('login', null);
 
-      //this.badge.clear();
+      this.storage.get('login').then((res)=>{
+        //console.log(res)
+        if (res != null) {
+          this.login = JSON.parse(res);
+          let d1 = new Date(this.login.exprireDate).getTime();
+          let d2 = new Date().getTime();
+          let diff = new Date(d2 - d1);
+          let y = (diff.getUTCFullYear() - 1970);
+          let m = diff.getUTCMonth();
+          let d = diff.getUTCDate() - 1;
+          if (y > 0 || (y == 0 && m > 0) || (y == 0 && m == 0 && d > 2))
+          {
+              this.nav.setRoot(LoginPage);
+          }
+          else
+          {
+            this.login.exprireDate = new Date().toString(); 
+            this.storage.set('login', JSON.stringify(this.login));
+          }
+        }
+        else {
+          this.login.exprireDate = new Date().toString(); 
+          this.storage.set('login', JSON.stringify(this.login));
+        }
+      });
 
       this.settings.openDatabase()
         .then(() => {
@@ -160,13 +192,22 @@ export class MyApp {
   }
 
   logout(){
+      this.showLoader();
       this.settings.updateSettingsData({key:"auth", value:"false"});
       this.settings.getValue("registration_id")
         .then((res) => {
             this.api.post("mols/unregistration", {REGISTRATION_ID : res})
               .subscribe(()=>{
+                this.hideLoader();
                 this.nav.setRoot(LoginPage);
+              }, (err) => {
+                alert(err.message);
+                this.hideLoader();
               });
+      })
+      .catch((err)=>{
+        alert(err.message);
+        this.hideLoader()
       });
   }
 
@@ -179,7 +220,7 @@ export class MyApp {
         text: 'OK',
         role: 'cancel',
         handler: () => {
-          this.badgeProvider.unread();
+          this.badgeProvider.update();
         }
       },
       {
@@ -200,6 +241,7 @@ export class MyApp {
     });
     this.loader.present();
   }
+
   hideLoader(){
     setTimeout(() => {
         this.loader.dismiss();

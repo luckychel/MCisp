@@ -13,13 +13,14 @@ export class BadgeProvider {
 
   constructor(public http: Http, public api: Api, public settings: Settings, public badge: Badge) {
   }
-
-  unread() {
+  
+  update() {
     return this.settings.getValue("mol_id")
         .then((mol_id) => {
           this.api.get('messages/unread/' + mol_id)
             .subscribe(res => {
-                this.badge.set(res.json());
+                var mcnt = res.json();
+                this.badge.set(mcnt);
             }, err => {
               console.error('ERROR', err);
             });

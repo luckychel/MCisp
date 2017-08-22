@@ -2,6 +2,11 @@
   <ion-header>
     <ion-toolbar>
       <ion-title>Меню</ion-title>
+      <ion-buttons end>
+        <span style="color:red" [ngClass]="{'registraionIdTrue': registrationId != null}">
+          <ion-icon name="md-bulb" style="color:red" [ngClass]="{'registraionIdTrue': registrationId != null}"></ion-icon> Push
+        </span>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
@@ -9,7 +14,6 @@
     <ion-list>
       <button menuClose icon-end ion-item *ngFor="let p of pages" (click)="openPage(p)" style="position:relative;">
         {{p.title}}
-        <ion-icon *ngIf="p.component.name == 'MessagesPage'" name="md-bulb" style="position:absolute;top:12px;right:30px;color:red" [ngClass]="{'registraionIdTrue': registrationId != null}" ></ion-icon>
       </button>
       <button ion-item (click)="logout()">
          Выйти
@@ -20,4 +24,6 @@
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
-<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>
+<ion-nav [root]="rootPage" #content swipeBackEnabled="false">
+  
+</ion-nav>

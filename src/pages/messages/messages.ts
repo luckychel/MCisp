@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController, NavParams, MenuController, LoadingController } from 'ionic-angular';
 import { MessagePage } from '../message/message';
-import { Item } from '../../models/item';
+/* import { Item } from '../../models/item'; */
 
 import { Api } from '../../providers/api';
 import { Settings } from '../../providers/settings';
 import { BadgeProvider } from '../../providers/badge';
+import { MessagesProvider } from '../../providers/messages';
 
 @Component({
   selector: 'page-messages',
@@ -13,8 +14,9 @@ import { BadgeProvider } from '../../providers/badge';
 })
 export class MessagesPage {
 
-  items: Item[] = [];
+  items: any[] = [];
   loader: any;
+  unread: number = 0;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -23,36 +25,51 @@ export class MessagesPage {
     public loadingCtrl: LoadingController, 
     public settings: Settings, 
     public api: Api, 
-    public badgeProvider: BadgeProvider) {
+    public badgeProvider: BadgeProvider, 
+    public messageProvider: MessagesProvider) {
   }
 
   getData(){
     this.showLoader()
     this.items = [];
-    this.settings.getValue("mol_id")
-        .then((res) => {
-            this.api.get("messages/" + res)
-              .map(res => {
-                return res.json()
-              })
-              .subscribe((res)=>{
-                if (res !== undefined && res.length > 0)
-                {
-                  for (let item of res) {
-                    this.items.push(item);
-                  }
-                }
-                this.hideLoader();
-              }, (err) =>{
-                this.hideLoader();
-              });
-      });
+    this.messageProvider.getMessages()
+      .then((res)=>{
+        res.subscribe((data)=>{
+          if (res!== undefined && data.length > 0) {
+            for (let item of data) {
+              this.items.push(item);
+            }
+          }
+          this.hideLoader();
+        }, (err)=>{
+          alert(err);
+        })
+    })
+    .then(()=>{
+      this.refreshMessagesUnread();
+    }).catch((err)=>{
+      alert(err);
+    });
   }
 
   ionViewWillEnter() {
     this.menuCtrl.enable(true, 'mainmenu');
     this.getData();
   }
+
+  refreshMessagesUnread(){
+    this.messageProvider.getUnreadCount()
+    .then((res)=>{
+      res.subscribe((data)=>{
+        this.unread = parseInt(data);
+      }, (err)=>{
+        alert(err);
+      });
+    }).catch((err)=>{
+      alert(err);
+    });
+  }
+
 
    doRefresh(refresher) {
     setTimeout(() => {
@@ -69,27 +86,31 @@ export class MessagesPage {
   }
 
   setread(p, slidingItem) {
+
     if (slidingItem !== undefined) {
       slidingItem.close();
     }     
 
-    this.api.post("messages/setread", {MESSAGE_ID: p.messagE_ID})
+    this.api.post("messages/setread", {HIST_ID: p.hisT_ID})
       .map(res => {
         return res.json()
       })
       .subscribe((res)=>{
           for (var i = 0; i< this.items.length; i++) {
-            if (this.items[i]["messagE_ID"] == p.messagE_ID)
+            if (this.items[i]["hisT_ID"] == p.hisT_ID)
             {
               this.items[i]["d_READ"] = new Date().getDate();
-              this.badgeProvider.unread();
+              this.badgeProvider.update();
               break;  
             }
           }
+      }, (err)=>{
+        alert(err);
       });
   }
 
   setdelete(p, slidingItem) {
+
     let alert = this.alertCtrl.create({
       title: "Предупреждение",
       message: "Удалить сообщение?",
@@ -98,19 +119,20 @@ export class MessagesPage {
           text: "OK",
           handler: () => {
             slidingItem.close();
-            this.api.post("messages/setdelete", {MESSAGE_ID: p.messagE_ID})
+            this.api.post("messages/setdelete", {HIST_ID: p.hisT_ID})
               .map(res => {
                 return res.json()
               })
               .subscribe((res)=>{
                   for (var i = 0; i< this.items.length; i++) {
-                    if (this.items[i]["messagE_ID"] == p.messagE_ID)
+                    if (this.items[i]["hisT_ID"] == p.hisT_ID)
                     {
                       this.items.splice(i, 1);
-                      this.badgeProvider.unread();
+                      this.badgeProvider.update();
                       break;  
                     }
                   }
+              }, (err)=>{
               });
           }
         },
@@ -132,6 +154,7 @@ export class MessagesPage {
     });
     this.loader.present();
   }
+
   hideLoader(){
     setTimeout(() => {
         this.loader.dismiss();

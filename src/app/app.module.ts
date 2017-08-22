@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { HttpModule/* , Http */ } from '@angular/http';
 import { IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
+import { IonicStorageModule } from '@ionic/storage';
+
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -20,6 +22,7 @@ import { Settings } from '../providers/settings';
 import { Api } from '../providers/api';
 import { User } from '../providers/user';
 import { BadgeProvider } from '../providers/badge';
+import { MessagesProvider } from '../providers/messages';
 
 
 @NgModule({
@@ -34,6 +37,7 @@ import { BadgeProvider } from '../providers/badge';
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -53,7 +57,8 @@ import { BadgeProvider } from '../providers/badge';
     Settings,
     Api,
     User,
-    BadgeProvider
+    BadgeProvider,
+    MessagesProvider
   ]
 })
 export class AppModule {}
