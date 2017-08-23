@@ -62,6 +62,7 @@ export class MessagesPage {
     .then((res)=>{
       res.subscribe((data)=>{
         this.unread = parseInt(data);
+        this.badgeProvider.updateCnt(this.unread);
       }, (err)=>{
         alert(err);
       });
@@ -69,7 +70,6 @@ export class MessagesPage {
       alert(err);
     });
   }
-
 
    doRefresh(refresher) {
     setTimeout(() => {
@@ -79,13 +79,13 @@ export class MessagesPage {
   }
 
   openItem(item) {
-    this.setread(item, undefined);
+    this.setRead(item, undefined);
     this.navCtrl.push(MessagePage, {
       item: item
     });
   }
 
-  setread(p, slidingItem) {
+  setRead(p, slidingItem) {
 
     if (slidingItem !== undefined) {
       slidingItem.close();
@@ -100,16 +100,40 @@ export class MessagesPage {
             if (this.items[i]["hisT_ID"] == p.hisT_ID)
             {
               this.items[i]["d_READ"] = new Date().getDate();
-              this.badgeProvider.update();
               break;  
             }
           }
+          this.refreshMessagesUnread();
       }, (err)=>{
         alert(err);
       });
   }
 
-  setdelete(p, slidingItem) {
+  setUnread(p, slidingItem) {
+    
+    if (slidingItem !== undefined) {
+      slidingItem.close();
+    }     
+
+    this.api.post("messages/setunread", {HIST_ID: p.hisT_ID})
+      .map(res => {
+        return res.json()
+      })
+      .subscribe((res)=>{
+          for (var i = 0; i< this.items.length; i++) {
+            if (this.items[i]["hisT_ID"] == p.hisT_ID)
+            {
+              this.items[i]["d_READ"] = null;
+              break;  
+            }
+          }
+          this.refreshMessagesUnread();
+      }, (err)=>{
+        alert(err);
+      });
+  }
+
+  setDelete(p, slidingItem) {
 
     let alert = this.alertCtrl.create({
       title: "Предупреждение",
@@ -128,10 +152,10 @@ export class MessagesPage {
                     if (this.items[i]["hisT_ID"] == p.hisT_ID)
                     {
                       this.items.splice(i, 1);
-                      this.badgeProvider.update();
                       break;  
                     }
                   }
+                  this.refreshMessagesUnread();
               }, (err)=>{
               });
           }

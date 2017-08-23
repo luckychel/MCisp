@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, MenuController } from 'ionic-angular';
+
+import { BadgeProvider } from '../../providers/badge';
 import { MessagesProvider } from '../../providers/messages';
 
 @Component({
@@ -12,13 +14,13 @@ export class HomePage {
 
   constructor(public navCtrl: NavController, 
     public menuCtrl: MenuController, 
+    public badgeProvider: BadgeProvider, 
     public messageProvider: MessagesProvider) {
 
   }
   
   ionViewWillEnter() {
     this.menuCtrl.enable(true, 'mainmenu');
-    
     this.refreshMessagesUnread();
   }
 
@@ -27,6 +29,7 @@ export class HomePage {
     .then((res)=>{
       res.subscribe((data)=>{
         this.unread = parseInt(data);
+        this.badgeProvider.updateCnt(this.unread);
       }, (err)=>{
         alert(err);
       });

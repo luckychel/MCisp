@@ -19,11 +19,15 @@ export class BadgeProvider {
         .then((mol_id) => {
           this.api.get('messages/unread/' + mol_id)
             .subscribe(res => {
-                var mcnt = res.json();
-                this.badge.set(mcnt);
+                this.updateCnt(res.json())
             }, err => {
               console.error('ERROR', err);
             });
         });
   }
+  
+  updateCnt(cnt){
+    this.badge.set(cnt);
+  }
+
 }

@@ -51,38 +51,39 @@ export class LoginPage {
 
     let us = this.user;
 
-    us.login(this.account).subscribe((res) => {
+    us.login(this.account)
+      .subscribe((res) => {
 
-      this.settings.updateSettingsData({key:"username", value:us._user.userName});
-      this.settings.updateSettingsData({key:"mol_id", value:us._user.molId})
+        this.settings.updateSettingsData({key:"username", value:us._user.userName});
+        this.settings.updateSettingsData({key:"mol_id", value:us._user.molId})
 
-      if (this.rememberme)
-      {
-        this.settings.updateSettingsData({key:"password", value:us._user.password});
-        this.settings.updateSettingsData({key:"auth", value:us._user.isAuth});
-        this.settings.updateSettingsData({key:"rememberme", value:this.rememberme});
-      }
-      else
-      {
-        this.settings.updateSettingsData({key:"password", value:null});
-        this.settings.updateSettingsData({key:"auth", value:"false"});
-        this.settings.updateSettingsData({key:"rememberme", value:"false"});
-      }
+        if (this.rememberme)
+        {
+          this.settings.updateSettingsData({key:"password", value:us._user.password});
+          this.settings.updateSettingsData({key:"auth", value:us._user.isAuth});
+          this.settings.updateSettingsData({key:"rememberme", value:this.rememberme});
+        }
+        else
+        {
+          this.settings.updateSettingsData({key:"password", value:null});
+          this.settings.updateSettingsData({key:"auth", value:"false"});
+          this.settings.updateSettingsData({key:"rememberme", value:"false"});
+        }
 
-      this.hideLoader();
+        this.hideLoader();
 
-      if (us._user.isAuth) {
-        us.registration({
-          MOL_ID: us._user.molId,
-          REGISTRATION_ID: this.registration_id,
-          MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
-        }).subscribe((res) => {
-          this.navCtrl.setRoot(HomePage);
-        });
-      }
-      else {
-        this.showToastr(us._user.authError);
-      }
+        if (us._user.isAuth) {
+          us.registration({
+            MOL_ID: us._user.molId,
+            REGISTRATION_ID: this.registration_id,
+            MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
+          }).subscribe((res) => {
+            this.navCtrl.setRoot(HomePage);
+          });
+        }
+        else {
+          this.showToastr(us._user.authError);
+        }
     }, (err) => {
       this.hideLoader();
       this.showToastr("Ошибка авторизации! " + err);
@@ -110,6 +111,7 @@ export class LoginPage {
     });
     this.loader.present();
   }
+  
   hideLoader(){
     setTimeout(() => {
         this.loader.dismiss();

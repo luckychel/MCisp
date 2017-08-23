@@ -13,15 +13,11 @@ export class User {
   }
 
   login(accountInfo: any) {
-    let seq = this.api.post('auth', accountInfo).share();
-
-    seq.map(res => res.json())
-      .subscribe(res => {
-        this._user = res;
-      }, err => {
-        console.error('ERROR', err);
+    return this.api.post('auth', accountInfo)
+      .map(res => {
+        this._user = res.json();
+        return res.json();
       });
-    return seq;
   }
 
   logout() {
@@ -33,12 +29,9 @@ export class User {
   }
 
   registration(userInfo: any){
-    let seq = this.api.post('mols/registration', userInfo).share();
-
-    seq.map(res => res.json())
-      .subscribe(res => {
-        return res;
-      });
-    return seq;
+    return this.api.post('mols/registration', userInfo)
+      .map(res => {
+          return res.json();
+        });
   }
 }

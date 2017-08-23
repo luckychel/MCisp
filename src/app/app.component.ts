@@ -148,9 +148,9 @@ export class MyApp {
         pushObject.on('notification').subscribe((notification: any) => {
 
             //прочтено
-            if (notification.additionalData.msgId != null)
+            if (notification.additionalData.msgHistId != null)
             {
-              this.api.post("messages/setread", {MESSAGE_ID: notification.additionalData.msgId})
+              this.api.post("messages/setread", {HIST_ID: notification.additionalData.msgHistId})
               .subscribe((res)=>{
                 if (notification.additionalData.foreground) {
                   this.presentAlert(notification);
@@ -183,7 +183,8 @@ export class MyApp {
     this.nav.setRoot(MessagesPage);
     this.nav.push(MessagePage, { 
     item: {
-      id: notification.additionalData.msgId,
+      histId: notification.additionalData.msgHistId,
+      msgId: notification.additionalData.msgId,
       title: notification.additionalData.msgTitle, 
       body: notification.additionalData.msgBody, 
       d_ADD: notification.additionalData.msgDAdd

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <button ion-button menuToggle>
-      <img *ngIf="unread>0" src="assets/img/unread_messages.png" style="position: absolute; top:6px; left:8px; "/>
+      <img *ngIf="unread>0" src="assets/img/unread_messages.png" style="position: absolute; top:4px; left:8px; "/>
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Сообщения</ion-title>
@@ -21,19 +21,23 @@
   </ion-refresher>
     
 <ion-list>
-    <ion-item-sliding *ngFor="let item of items" (ionSwipe)="setdelete(item, slidingItem)" #slidingItem>
+    <ion-item-sliding *ngFor="let item of items" (ionSwipe)="setDelete(item, slidingItem)" #slidingItem>
       <button ion-item (click)="openItem(item)">
         <h2 [ngClass]="{'cbold': item.d_READ == null}">{{item.title}}</h2>
         <p [ngClass]="{'cbold': item.d_READ == null}">{{item.body}}</p>
         <ion-note [ngClass]="{'cbold': item.d_READ == null}" item-end style="font-size:9px;">{{item.d_ADD | date: 'dd.MM.yyyy H:mm'}}</ion-note>
       </button>
       
+      <ion-item-options side="left" *ngIf="item.d_READ != null">
+          <button ion-button color="success" (click)="setUnread(item, slidingItem)">Не прочтено</button>
+        </ion-item-options>
+
       <ion-item-options side="left" *ngIf="item.d_READ == null">
-        <button ion-button color="success" (click)="setread(item, slidingItem)">Прочтено</button>
+        <button ion-button color="success" (click)="setRead(item, slidingItem)">Прочтено</button>
       </ion-item-options>
       
       <ion-item-options side="right">
-        <button ion-button color="danger" (click)="setdelete(item, slidingItem)">Удалить</button>
+        <button ion-button color="danger" (click)="setDelete(item, slidingItem)">Удалить</button>
       </ion-item-options>
 
     </ion-item-sliding>
