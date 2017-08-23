@@ -100,7 +100,7 @@ export class MyApp {
            this.pushSetup();
         })
         .then(()=>{
-           return this.checkAuth().then((res)=>{
+           this.checkAuth().then((res)=>{
             if (!res) {
               this.rootPage = LoginPage;
             }
@@ -147,18 +147,27 @@ export class MyApp {
 
         pushObject.on('notification').subscribe((notification: any) => {
 
-            //прочтено
-            if (notification.additionalData.msgHistId != null)
-            {
-              this.api.post("messages/setread", {HIST_ID: notification.additionalData.msgHistId})
-              .subscribe((res)=>{
-                if (notification.additionalData.foreground) {
-                  this.presentAlert(notification);
-                } else { 
-                  this.goToMessages(notification);
-                }
-              });
-            }
+            this.checkAuth().then((res)=>{
+              if (!res) {
+                this.rootPage = LoginPage;
+              }
+              else
+              {
+                //прочтено
+                if (notification.additionalData.msgHistId != null)
+                  {
+                    this.api.post("messages/setread", {HIST_ID: notification.additionalData.msgHistId})
+                    .subscribe((res)=>{
+                      if (notification.additionalData.foreground) {
+                        this.presentAlert(notification);
+                      } else { 
+                        this.goToMessages(notification);
+                      }
+                    });
+                  }
+              }
+            });
+
           }
         );
 
