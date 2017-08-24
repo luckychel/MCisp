@@ -67,7 +67,6 @@ export class MyApp {
      // this.storage.set('login', null);
 
       this.storage.get('login').then((res)=>{
-        //console.log(res)
         if (res != null) {
           this.login = JSON.parse(res);
           let d1 = new Date(this.login.exprireDate).getTime();
@@ -174,16 +173,16 @@ export class MyApp {
         pushObject.on('registration').subscribe((registration: any) => {
           this.settings.updateSettingsData({key:"registration_id", value: registration.registrationId});
           this.registrationId = registration.registrationId;
-          //console.log(registration.registrationId);
+          //console.log("registration_id: " + registration.registrationId);
         });
 
         pushObject.on('error').subscribe(error => {
-          alert('Error with Push plugin ' + error)
+          alert('Ошибка Push plugin ' + error)
         });
 
       } 
       else {
-        alert('We do not have permission to send push notifications');
+        alert('Вы не можете получать Push уведомления!');
       }
     });
   }
