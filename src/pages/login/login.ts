@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Platform, NavController, ToastController, LoadingController, MenuController } from 'ionic-angular';
+import { Platform, NavController, AlertController, ToastController, LoadingController, MenuController } from 'ionic-angular';
+import { Network } from '@ionic-native/network';
 
 import { HomePage } from '../home/home';
 import { Settings } from '../../providers/settings';
@@ -23,9 +24,11 @@ export class LoginPage {
     public navCtrl: NavController,
     public user: User,
     public settings: Settings,
+    public alertCtrl: AlertController,
     public toastCtrl: ToastController,
     public loadingCtrl: LoadingController, 
-    public menuCtrl: MenuController
+    public menuCtrl: MenuController,
+    private network: Network
     ) {
       
     }
@@ -40,10 +43,13 @@ export class LoginPage {
         this.rememberme = settings["rememberme"];
         this.registration_id = settings["registration_id"];
       });
+     
   }
 
    doLogin() {
-
+    if (!this.checkNetworkConnection())
+      return;
+    
     if (!this.checkOnEmpty()) 
       return;
 
@@ -126,4 +132,27 @@ export class LoginPage {
       });
       toast.present();
   }
+
+  checkNetworkConnection():Boolean{
+    
+    var networkState = this.network.type.toUpperCase();
+    var states = {};
+    states["UNKNOWN"]  = 'Unknown connection';
+    states["ETHERNET"] = 'Ethernet connection';
+    states["WIFI"]     = 'WiFi connection';
+    states["CELL_2G"]  = 'Cell 2G connection';
+    states["CELL_3G"]  = 'Cell 3G connection';
+    states["CELL_4G"]  = 'Cell 4G connection';
+    states["CELL"]     = 'Cell generic connection';
+    states["NONE"]     = 'No network connection';
+
+    if (states[networkState] == "No network connection")
+    {
+      this.showToastr("Вы не подключены к сети интернет...")
+      return false;
+    }
+    
+    return true;
+  }
+
 }

@@ -244,6 +244,8 @@ export class MyApp {
     alert.present();
   }
 
+
+
   showLoader(){
     this.loader = this.loadingCtrl.create({
       content: 'Пожалуйста подождите...'

@@ -3,7 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { HttpModule/* , Http */ } from '@angular/http';
 import { IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
-
+import { Network } from '@ionic-native/network';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -37,7 +37,7 @@ import { MessagesProvider } from '../providers/messages';
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -50,6 +50,7 @@ import { MessagesProvider } from '../providers/messages';
   providers: [
     StatusBar,
     SplashScreen,
+    Network,
     Push,
     HeaderColor,
     Badge,
