@@ -97,6 +97,7 @@ export class MyApp {
         })
         .then(() => {
            this.pushSetup().then(()=>{
+
             this.checkAuth().then((res)=>{
              if (!res) {
                this.rootPage = LoginPage;
@@ -105,6 +106,7 @@ export class MyApp {
              {
                this.rootPage = HomePage;
              }
+             
            });
          });;
         })

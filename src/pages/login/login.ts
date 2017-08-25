@@ -22,13 +22,13 @@ export class LoginPage {
 
   constructor(public platform: Platform,
     public navCtrl: NavController,
-    public user: User,
-    public settings: Settings,
     public alertCtrl: AlertController,
     public toastCtrl: ToastController,
     public loadingCtrl: LoadingController, 
     public menuCtrl: MenuController,
-    private network: Network
+    private network: Network,
+    public user: User,
+    public settings: Settings
     ) {
       
     }
