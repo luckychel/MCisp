@@ -25,17 +25,6 @@ export class HomePage {
   }
   
   ionViewWillEnter() {
-
-    this.settings.getAll()
-      .then(settings => {
-        let us = this.user;
-        us.registration({
-          MOL_ID: settings["mol_id"],
-          REGISTRATION_ID:  settings["registration_id"],
-          MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
-        });
-      });
-
     this.menuCtrl.enable(true, 'mainmenu');
     this.refreshMessagesUnread();
   }

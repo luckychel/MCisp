@@ -13,6 +13,7 @@ import { MessagePage } from '../pages/message/message';
 
 import { Api } from '../providers/api';
 import { Settings } from '../providers/settings';
+import { User } from '../providers/user';
 import { BadgeProvider } from '../providers/badge';
 
 @Component({
@@ -39,6 +40,7 @@ export class MyApp {
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController, 
     public api: Api,
+    public user: User,
     public badgeProvider: BadgeProvider,
     private storage: Storage)
     
@@ -97,18 +99,19 @@ export class MyApp {
         })
         .then(() => {
            this.pushSetup().then(()=>{
-
-            this.checkAuth().then((res)=>{
-             if (!res) {
-               this.rootPage = LoginPage;
-             }
-             else
-             {
-               this.rootPage = HomePage;
-             }
-             
-           });
-         });;
+         })
+         .then(()=>{
+          this.checkAuth().then((res)=>{
+            if (!res) {
+              this.rootPage = LoginPage;
+            }
+            else
+            {
+              this.rootPage = HomePage;
+            }
+            
+          });
+         })
         })
     });
   }
@@ -174,6 +177,23 @@ export class MyApp {
         pushObject.on('registration').subscribe((registration: any) => {
           this.settings.updateSettingsData({key:"registration_id", value: registration.registrationId});
           this.registrationId = registration.registrationId;
+
+          this.settings.getAll()
+          .then(settings => {
+            let us = this.user;
+
+            console.log("registration_id = " + registration.registrationId)
+            console.log("mol_id = " + settings["mol_id"])
+            console.log("platform = " + (this.platform.is('android') ? 1 : 2))
+
+            us.registration({
+              MOL_ID: settings["mol_id"],
+              REGISTRATION_ID:  registration.registrationId,
+              MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
+            }).subscribe((res)=>{
+            });
+          });
+          
           //console.log("registration_id: " + registration.registrationId);
         });
 
@@ -182,9 +202,9 @@ export class MyApp {
         });
 
       } 
-      else {
+      /* else {
         alert('Вы не можете получать Push уведомления!');
-      }
+      } */
     });
   }
 
