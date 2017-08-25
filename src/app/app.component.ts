@@ -96,19 +96,18 @@ export class MyApp {
           this.splashScreen.hide();
         })
         .then(() => {
-           this.pushSetup();
+           this.pushSetup().then(()=>{
+            this.checkAuth().then((res)=>{
+             if (!res) {
+               this.rootPage = LoginPage;
+             }
+             else
+             {
+               this.rootPage = HomePage;
+             }
+           });
+         });;
         })
-        .then(()=>{
-           this.checkAuth().then((res)=>{
-            if (!res) {
-              this.rootPage = LoginPage;
-            }
-            else
-            {
-              this.rootPage = HomePage;
-            }
-          });
-        });
     });
   }
 
@@ -124,7 +123,7 @@ export class MyApp {
   }
 
   pushSetup(){
-    this.push.hasPermission()
+    return this.push.hasPermission()
     .then((res: any) => {
 
       //We have permission to send push notifications
