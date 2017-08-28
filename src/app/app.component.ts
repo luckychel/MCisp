@@ -193,8 +193,7 @@ export class MyApp {
             }).subscribe((res)=>{
             });
           });
-          
-          //console.log("registration_id: " + registration.registrationId);
+
         });
 
         pushObject.on('error').subscribe(error => {
