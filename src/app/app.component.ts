@@ -228,7 +228,8 @@ export class MyApp {
             this.api.post("mols/unregistration", {REGISTRATION_ID : res})
               .subscribe(()=>{
                 this.hideLoader();
-                this.nav.setRoot(LoginPage);
+                //this.nav.setRoot(LoginPage);
+                window.location.reload();
               }, (err) => {
                 alert(err.message);
                 this.hideLoader();
