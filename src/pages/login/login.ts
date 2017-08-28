@@ -79,13 +79,7 @@ export class LoginPage {
         this.hideLoader();
 
         if (us._user.isAuth) {
-          us.registration({
-            MOL_ID: us._user.molId,
-            REGISTRATION_ID: this.registration_id,
-            MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
-          }).subscribe((res) => {
             this.navCtrl.setRoot(HomePage);
-          });
         }
         else {
           this.showToastr(us._user.authError);
