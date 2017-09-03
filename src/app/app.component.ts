@@ -67,51 +67,50 @@ export class MyApp {
       }
       
      // this.storage.set('login', null);
-
-      this.storage.get('login').then((res)=>{
-        if (res != null) {
-          this.login = JSON.parse(res);
-          let d1 = new Date(this.login.exprireDate).getTime();
-          let d2 = new Date().getTime();
-          let diff = new Date(d2 - d1);
-          let y = (diff.getUTCFullYear() - 1970);
-          let m = diff.getUTCMonth();
-          let d = diff.getUTCDate() - 1;
-          if (y > 0 || (y == 0 && m > 0) || (y == 0 && m == 0 && d > 2))
-          {
-              this.nav.setRoot(LoginPage);
-          }
-          else
-          {
-            this.login.exprireDate = new Date().toString(); 
-            this.storage.set('login', JSON.stringify(this.login));
-          }
-        }
-        else {
-          this.login.exprireDate = new Date().toString(); 
-          this.storage.set('login', JSON.stringify(this.login));
-        }
-      });
+      /*      this.storage.get('login').then((res)=>{
+            if (res != null) {
+              this.login = JSON.parse(res);
+              let d1 = new Date(this.login.exprireDate).getTime();
+              let d2 = new Date().getTime();
+              let diff = new Date(d2 - d1);
+              let y = (diff.getUTCFullYear() - 1970);
+              let m = diff.getUTCMonth();
+              let d = diff.getUTCDate() - 1;
+              if (y > 0 || (y == 0 && m > 0) || (y == 0 && m == 0 && d > 2))
+              {
+                  this.nav.setRoot(LoginPage);
+              }
+              else
+              {
+                this.login.exprireDate = new Date().toString(); 
+                this.storage.set('login', JSON.stringify(this.login));
+              }
+            }
+            else {
+              this.login.exprireDate = new Date().toString(); 
+              this.storage.set('login', JSON.stringify(this.login));
+            }
+          });
+      */
 
       this.settings.openDatabase()
         .then(() => {
           this.splashScreen.hide();
         })
         .then(() => {
-           this.pushSetup().then(()=>{
-         })
-         .then(()=>{
-          this.checkAuth().then((res)=>{
-            if (!res) {
-              this.rootPage = LoginPage;
-            }
-            else
-            {
-              this.rootPage = HomePage;
-            }
-            
-          });
-         })
+           this.pushSetup()
+           .then((res)=>{})
+           .then(()=>{
+              this.checkAuth().then((res)=>{
+                if (!res) {
+                  this.rootPage = LoginPage;
+                }
+                else
+                {
+                  this.rootPage = HomePage;
+                }
+              });
+          })
         })
     });
   }
