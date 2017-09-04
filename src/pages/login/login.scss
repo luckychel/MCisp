@@ -10,12 +10,6 @@ page-login {
     z-index: 1;
   }
 
-  @keyframes animatedBackground {
-    from { background-position: 0 0; }
-    to { background-position: 100% 0; }
-  }
-
-
   .splash-info {
     position: relative;
     z-index: 2;

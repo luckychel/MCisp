@@ -4,7 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { HeaderColor } from '@ionic-native/header-color';
-import { Storage } from '@ionic/storage';
+/* import { Storage } from '@ionic/storage'; */
 
 import { LoginPage} from '../pages/login/login';
 import { HomePage } from '../pages/home/home';
@@ -42,7 +42,8 @@ export class MyApp {
     public api: Api,
     public user: User,
     public badgeProvider: BadgeProvider,
-    private storage: Storage)
+  /*   private storage: Storage */
+  )
     
     {
       //Наполнение меню
