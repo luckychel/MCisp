@@ -23,8 +23,8 @@
 <ion-list>
     <ion-item-sliding *ngFor="let item of items" (ionSwipe)="setDelete(item, slidingItem)" #slidingItem>
       <button ion-item (click)="openItem(item)">
-        <h2 [ngClass]="{'cbold': item.d_READ == null}">{{item.title}}</h2>
-        <p [ngClass]="{'cbold': item.d_READ == null}">{{item.body}}</p>
+        <h2 [ngClass]="{'cbold': item.d_READ == null}" [innerHTML]="item.title"></h2>
+        <p [ngClass]="{'cbold': item.d_READ == null}" [innerHTML]="item.body"></p>
         <ion-note [ngClass]="{'cbold': item.d_READ == null}" item-end style="font-size:9px;">{{item.d_ADD | date: 'dd.MM.yyyy H:mm'}}</ion-note>
       </button>
       

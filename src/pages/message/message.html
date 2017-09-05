@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{ item.title }}</ion-title>
+    <ion-title class="toolbar-title toolbar-title-md" [innerHTML]="item.title"></ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -10,14 +10,14 @@
   <ion-card class="item-profile">
      <ion-card-header style="background-color: #f1f1f1;">
       <strong>Тема: </strong>
-      <span>{{item.title}}</span>
+      <span [innerHTML]="item.title"></span>
       <br />
       <strong>Дата: </strong>
       <span>{{item.d_ADD | date: 'dd.MM.yyyy H:mm'}}</span>
     </ion-card-header>
     
     <ion-card-content>
-      <h2 style="padding-top:10px;">{{item.body}}</h2>
+      <h2 [innerHTML]="item.body" style="padding-top:10px;"></h2>
     </ion-card-content>
   </ion-card>
 </ion-content>
