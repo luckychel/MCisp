@@ -100,7 +100,6 @@ export class MyApp {
         })
         .then(() => {
            this.pushSetup()
-           .then((res)=>{})
            .then(()=>{
               this.checkAuth().then((res)=>{
                 if (!res) {
@@ -175,25 +174,27 @@ export class MyApp {
         );
 
         pushObject.on('registration').subscribe((registration: any) => {
-          this.settings.updateSettingsData({key:"registration_id", value: registration.registrationId});
-          this.registrationId = registration.registrationId;
 
-          this.settings.getAll()
-          .then(settings => {
-            let us = this.user;
+          this.settings.updateSettingsData({key:"registration_id", value: registration.registrationId})
+          .then(()=>{
+            this.registrationId = registration.registrationId;
 
-            console.log("registration_id = " + registration.registrationId)
-            console.log("mol_id = " + settings["mol_id"])
-            console.log("platform = " + (this.platform.is('android') ? 1 : 2))
-
-            us.registration({
-              MOL_ID: settings["mol_id"],
-              REGISTRATION_ID:  registration.registrationId,
-              MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
-            }).subscribe((res)=>{
+            this.settings.getAll()
+            .then(settings => {
+              let us = this.user;
+  
+              console.log("registration_id = " + registration.registrationId)
+              console.log("mol_id = " + settings["mol_id"])
+              console.log("platform = " + (this.platform.is('android') ? 1 : 2))
+  
+              us.registration({
+                MOL_ID: settings["mol_id"],
+                REGISTRATION_ID:  registration.registrationId,
+                MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
+              });
+              
             });
           });
-
         });
 
         pushObject.on('error').subscribe(error => {

@@ -43,7 +43,6 @@ export class LoginPage {
         this.rememberme = settings["rememberme"];
         this.registration_id = settings["registration_id"];
       });
-     
   }
 
    doLogin() {
@@ -59,7 +58,7 @@ export class LoginPage {
 
     us.login(this.account)
       .subscribe((res) => {
-
+        
         this.settings.updateSettingsData({key:"username", value:us._user.userName});
         this.settings.updateSettingsData({key:"mol_id", value:us._user.molId})
 
@@ -68,7 +67,7 @@ export class LoginPage {
           this.settings.updateSettingsData({key:"password", value:us._user.password});
           this.settings.updateSettingsData({key:"auth", value:us._user.isAuth});
           this.settings.updateSettingsData({key:"rememberme", value:this.rememberme});
-        }
+        } 
         else
         {
           this.settings.updateSettingsData({key:"password", value:null});
@@ -76,14 +75,24 @@ export class LoginPage {
           this.settings.updateSettingsData({key:"rememberme", value:"false"});
         }
 
-        this.hideLoader();
+        us.registration({
+          MOL_ID: us._user.molId,
+          REGISTRATION_ID: this.registration_id,
+          MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
+        }).subscribe(()=> {
 
-        if (us._user.isAuth) {
-            this.navCtrl.setRoot(HomePage);
-        }
-        else {
-          this.showToastr(us._user.authError);
-        }
+          this.hideLoader();
+
+          if (us._user.isAuth) {
+              this.navCtrl.setRoot(HomePage);
+          }
+          else {
+            this.showToastr(us._user.authError);
+          }
+        }, (err)=>{
+          this.hideLoader();
+        });
+
     }, (err) => {
       this.hideLoader();
       this.showToastr("Ошибка авторизации! " + err);
