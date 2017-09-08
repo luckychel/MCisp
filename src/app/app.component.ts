@@ -159,7 +159,7 @@ export class MyApp {
                 if (notification.additionalData.msgHistId != null)
                   {
                     this.api.post("messages/setread", {HIST_ID: notification.additionalData.msgHistId})
-                    .subscribe((res)=>{
+                    .subscribe(()=>{
                       if (notification.additionalData.foreground) {
                         this.presentAlert(notification);
                       } else { 
@@ -179,21 +179,25 @@ export class MyApp {
           .then(()=>{
             this.registrationId = registration.registrationId;
 
+            console.log("set registration_id to db " + registration.registrationId);
+
             this.settings.getAll()
             .then(settings => {
+    
               let us = this.user;
-  
-              console.log("registration_id = " + registration.registrationId)
-              console.log("mol_id = " + settings["mol_id"])
-              console.log("platform = " + (this.platform.is('android') ? 1 : 2))
-  
               us.registration({
                 MOL_ID: settings["mol_id"],
-                REGISTRATION_ID:  registration.registrationId,
+                REGISTRATION_ID: registration.registrationId,
                 MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
+              }).subscribe(()=>{
+
+                console.log("registration_id updated in app.component.ts");
+
+              },(err)=>{
+                this.hideLoader();
               });
-              
             });
+            
           });
         });
 

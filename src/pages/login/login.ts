@@ -59,14 +59,14 @@ export class LoginPage {
     us.login(this.account)
       .subscribe((res) => {
         
-        this.settings.updateSettingsData({key:"username", value:us._user.userName});
-        this.settings.updateSettingsData({key:"mol_id", value:us._user.molId})
+        this.settings.updateSettingsData({key:"username", value: us._user.userName});
+        this.settings.updateSettingsData({key:"mol_id", value: us._user.molId})
 
         if (this.rememberme)
         {
-          this.settings.updateSettingsData({key:"password", value:us._user.password});
-          this.settings.updateSettingsData({key:"auth", value:us._user.isAuth});
-          this.settings.updateSettingsData({key:"rememberme", value:this.rememberme});
+          this.settings.updateSettingsData({key:"password", value: us._user.password});
+          this.settings.updateSettingsData({key:"auth", value: us._user.isAuth});
+          this.settings.updateSettingsData({key:"rememberme", value: this.rememberme});
         } 
         else
         {
@@ -75,22 +75,31 @@ export class LoginPage {
           this.settings.updateSettingsData({key:"rememberme", value:"false"});
         }
 
-        us.registration({
-          MOL_ID: us._user.molId,
-          REGISTRATION_ID: this.registration_id,
-          MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
-        }).subscribe(()=> {
+        this.settings.getAll()
+        .then(settings => {
 
-          this.hideLoader();
+          console.log("mol_id = " + us._user.molId);
+          console.log("registration_id = " + settings["registration_id"]);
+          console.log("platform = " + (this.platform.is('android') ? 1 : 2));
 
-          if (us._user.isAuth) {
-              this.navCtrl.setRoot(HomePage);
-          }
-          else {
-            this.showToastr(us._user.authError);
-          }
-        }, (err)=>{
-          this.hideLoader();
+          us.registration({
+            MOL_ID: us._user.molId,
+            REGISTRATION_ID: settings["registration_id"] || "",
+            MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
+          }).subscribe(()=>{
+            console.log("registration_id updated in login.ts")
+
+            this.hideLoader();
+            
+            if (us._user.isAuth) {
+                this.navCtrl.setRoot(HomePage);
+            }
+            else {
+              this.showToastr(us._user.authError);
+            }
+          },(err)=>{
+            this.hideLoader();
+          });
         });
 
     }, (err) => {
