@@ -1,50 +1,56 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, AlertController, LoadingController} from 'ionic-angular';
+import { Nav, Platform, Events } from 'ionic-angular';
+
+import { AppVersion } from '@ionic-native/app-version';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { HeaderColor } from '@ionic-native/header-color';
-/* import { Storage } from '@ionic/storage'; */
 
 import { LoginPage} from '../pages/login/login';
 import { HomePage } from '../pages/home/home';
 import { MessagesPage } from '../pages/messages/messages';
-import { MessagePage } from '../pages/message/message';
+/* import { MessagePage } from '../pages/message/message'; */
 
-import { Api } from '../providers/api';
-import { Settings } from '../providers/settings';
-import { User } from '../providers/user';
-import { BadgeProvider } from '../providers/badge';
+import { DbProvider } from '../providers/db/db';
+import { UserProvider } from '../providers/user/user';
+import { MessagesProvider } from '../providers/messages/messages';
+import { PushProvider } from '../providers/push/push';
+import { LoaderProvider } from '../providers/loader/loader';
+import { ToastProvider } from '../providers/toast/toast';
+
+/* import { MyAppProvider } from '../providers/my-app/my-app'; */
+
+import { DomSanitizer} from '@angular/platform-browser';
 
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: 'app.html',
+/*   providers: [MyAppProvider]   */ 
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
+  version: any;
   rootPage: any = null;
-  loader: any;
+  _user : any;
   pages: Array<{title: string, component: any}>;
-
-  registrationId: any;
-  login = {
-    exprireDate: ""
-  };
+  registrationId: boolean = false;
 
   constructor(public platform: Platform, 
     public statusBar: StatusBar, 
     public splashScreen: SplashScreen, 
     public headerColor: HeaderColor, 
-    public settings:Settings, 
-    public push: Push, 
-    public alertCtrl: AlertController,
-    public loadingCtrl: LoadingController, 
-    public api: Api,
-    public user: User,
-    public badgeProvider: BadgeProvider,
-  /*   private storage: Storage */
+    public appVersion: AppVersion,
+    public events: Events,
+
+    public loaderProvider: LoaderProvider,
+    public toastProvider: ToastProvider, 
+
+    public db: DbProvider, 
+    public user: UserProvider,
+    public messagesProvider: MessagesProvider,
+    public pushProvider: PushProvider,
+    public dom: DomSanitizer,
   )
-    
     {
       //Наполнение меню
        this.pages = [
@@ -53,65 +59,69 @@ export class MyApp {
         ];
 
       this.initializeApp();
+
     }
 
   initializeApp() {
     this.platform.ready().then(() => {
-        // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
+
       this.headerColor.tint('#4d7198');
 
+      //android
       if (this.platform.is('android')) {
         this.statusBar.backgroundColorByHexString("#4d7198");
       } else { //ios
         this.statusBar.backgroundColorByName("blue");
       }
-      
-     // this.storage.set('login', null);
-      /*      this.storage.get('login').then((res)=>{
-            if (res != null) {
-              this.login = JSON.parse(res);
-              let d1 = new Date(this.login.exprireDate).getTime();
-              let d2 = new Date().getTime();
-              let diff = new Date(d2 - d1);
-              let y = (diff.getUTCFullYear() - 1970);
-              let m = diff.getUTCMonth();
-              let d = diff.getUTCDate() - 1;
-              if (y > 0 || (y == 0 && m > 0) || (y == 0 && m == 0 && d > 2))
-              {
-                  this.nav.setRoot(LoginPage);
-              }
-              else
-              {
-                this.login.exprireDate = new Date().toString(); 
-                this.storage.set('login', JSON.stringify(this.login));
-              }
-            }
-            else {
-              this.login.exprireDate = new Date().toString(); 
-              this.storage.set('login', JSON.stringify(this.login));
-            }
-          });
-      */
 
-      this.settings.openDatabase()
-        .then(() => {
-          this.splashScreen.hide();
-        })
-        .then(() => {
-           this.pushSetup()
-           .then(()=>{
-              this.checkAuth().then((res)=>{
-                if (!res) {
-                  this.rootPage = LoginPage;
-                }
-                else
-                {
-                  this.rootPage = HomePage;
-                }
-              });
-          })
-        })
+      this.splashScreen.hide();
+
+      if (this.platform.is('cordova')) {
+        this.appVersion.getVersionNumber().then((res)=>{ this.version = res});
+      } else {
+        this.version = "<тест>";
+      }
+
+      //вешаем событие на изменение индикатора push
+      this.events.subscribe('user:registrationId', (val) => {
+        this.registrationId = val;
+      });
+
+      this._user = this.user._user;
+      
+      this.getDbData().then(()=>{
+
+      /*   console.log("serverToken: " + this._user.serverToken); 
+        console.log("login: " + this._user.login);
+        console.log("password: " + this._user.password);
+        console.log("molId: " + this._user.molId);
+        console.log("molName: " + this._user.molName); 
+        console.log("isAuth: " + this._user.isAuth); 
+ */
+        //вход с токеном
+        if (this._user.serverToken !== "" && this._user.isRemember && this._user.isAuth)
+        {
+          //console.log("проверка токена: " + this._user.serverToken); 
+          //проверка
+          this.user.checkToken().then(() => {
+
+            //если токен валидный пускаем
+            this.pushProvider.setup(this._user.molId)
+            .then(()=> {
+              this.setRootPage(HomePage);
+            });
+           
+          }).catch((err)=>{
+            this.toastProvider.show(err.message);
+            this.setRootPage(LoginPage);
+          });
+        }
+        else {
+          this.setRootPage(LoginPage);
+        }
+      }).catch((err)=>{
+        this.toastProvider.show(err.message);
+      })
     });
   }
 
@@ -119,169 +129,49 @@ export class MyApp {
     this.nav.setRoot(page.component);
   }
 
-  checkAuth(){
-    return Promise.resolve(this.settings.getAll()
-      .then(settings => {
-        return settings["auth"] == "true" && settings["rememberme"] == "true";
-      }));
+  setRootPage(page: any) {
+    this.rootPage = page;
   }
 
-  pushSetup(){
-    return this.push.hasPermission()
-    .then((res: any) => {
-
-      //We have permission to send push notifications
-      if (res.isEnabled) {
-        const options: PushOptions = {
-          android: {
-              senderID: '74408042527',
-              sound: 'true'
-          },
-          ios: {
-              alert: 'true',
-              badge: true,
-              sound: 'true'
-          },
-          windows: {}
-        };
-
-        const pushObject: PushObject = this.push.init(options);
-
-        pushObject.on('notification').subscribe((notification: any) => {
-
-            this.checkAuth().then((res)=>{
-              if (!res) {
-                this.rootPage = LoginPage;
-              }
-              else
-              {
-                //прочтено
-                if (notification.additionalData.msgHistId != null)
-                  {
-                    this.api.post("messages/setread", {HIST_ID: notification.additionalData.msgHistId})
-                    .subscribe(()=>{
-                      if (notification.additionalData.foreground) {
-                        this.presentAlert(notification);
-                      } else { 
-                        this.goToMessages(notification);
-                      }
-                    });
-                  }
-              }
-            });
-
-          }
-        );
-
-        pushObject.on('registration').subscribe((registration: any) => {
-
-          this.settings.updateSettingsData({key:"registration_id", value: registration.registrationId})
-          .then(()=>{
-            this.registrationId = registration.registrationId;
-
-            console.log("set registration_id to db " + registration.registrationId);
-
-            this.settings.getAll()
-            .then(settings => {
-    
-              let us = this.user;
-              us.registration({
-                MOL_ID: settings["mol_id"],
-                REGISTRATION_ID: registration.registrationId,
-                MOBILE_PLATFORM: (this.platform.is('android') ? 1 : 2)
-              }).subscribe(()=>{
-
-                console.log("registration_id updated in app.component.ts");
-
-              },(err)=>{
-                this.hideLoader();
-              });
-            });
-            
-          });
-        });
-
-        pushObject.on('error').subscribe(error => {
-          alert('Ошибка Push plugin ' + error)
-        });
-
-      } 
-      /* else {
-        alert('Вы не можете получать Push уведомления!');
-      } */
-    });
-  }
-
-  goToMessages(notification){
-    this.nav.setRoot(MessagesPage);
-    this.nav.push(MessagePage, { 
-    item: {
-      histId: notification.additionalData.msgHistId,
-      msgId: notification.additionalData.msgId,
-      title: notification.additionalData.msgTitle, 
-      body: notification.additionalData.msgBody, 
-      d_ADD: notification.additionalData.msgDAdd
-    } 
-  });
-  }
-
-  logout(){
-      this.showLoader();
-      this.settings.updateSettingsData({key:"auth", value:"false"});
-      this.settings.getValue("registration_id")
-        .then((res) => {
-            this.api.post("mols/unregistration", {REGISTRATION_ID : res})
-              .subscribe(()=>{
-                this.hideLoader();
-                //this.nav.setRoot(LoginPage);
-                window.location.reload();
-              }, (err) => {
-                alert(err.message);
-                this.hideLoader();
-              });
-      })
-      .catch((err)=>{
-        alert(err.message);
-        this.hideLoader()
-      });
-  }
-
-  presentAlert(notification) {
-    let alert = this.alertCtrl.create({
-      title: notification.title,
-      subTitle: notification.message,
-      buttons: [
-      {
-        text: 'OK',
-        role: 'cancel',
-        handler: () => {
-          this.badgeProvider.update();
-        }
-      },
-      {
-        text: 'Подробнее',
-        handler: () => {
-          this.goToMessages(notification);
-        }
+  getDbData(){
+    let asyncTask = new Promise((resolve, reject) => {
+      try {
+        let t1 = this.db.getValue("login").then((res) => this._user.login = res);
+        let t2 = this.db.getValue("password").then((res) => this._user.password = res);
+        let t3 = this.db.getValue("molId").then((res) => this._user.molId = res);
+        let t4 = this.db.getValue("molName").then((res) => this._user.molName = res);
+        let t5 = this.db.getValue("molPhoto").then((res) => this._user.molPhoto = res);
+        let t6 = this.db.getValue("isAuth").then((res) => this._user.isAuth = res);
+        let t7 = this.db.getValue("isRemember").then((res) => this._user.isRemember = res);
+        let t8 = this.db.getValue("serverToken").then((res) => this._user.serverToken = res);
+        return Promise.all([t1, t2, t3, t4, t5, t6, t7, t8])
+        .then(()=> resolve(true))
+        .catch((err)=> reject(new Error('Ошибка сохранения данных в таблицу настроек ' + err.message)));
       }
-    ],
-    cssClass: 'alertCustomCss'
+      catch (err){
+        reject(new Error('Ошибка получения таблицы настроек ' + err.message));
+      }
     });
-    alert.present();
+    return asyncTask;
   }
 
-
-
-  showLoader(){
-    this.loader = this.loadingCtrl.create({
-      content: 'Пожалуйста подождите...'
-    });
-    this.loader.present();
+  
+  logout(){
+      this.loaderProvider.show();
+      return this.db.setValue('isAuth', false)
+        .then(()=>{
+          return this.db.getValue('registrationId');
+        }).then((res)=>{
+          return this.user.unregistration({REGISTRATION_ID : res})
+        }).then(()=>{
+          this.loaderProvider.hide();
+          this.nav.setRoot(LoginPage);
+          //window.location.reload();
+        })
+        .catch((err)=>{
+          this.loaderProvider.hide();
+          new Error(err.message)
+        });
   }
-
-  hideLoader(){
-    setTimeout(() => {
-        this.loader.dismiss();
-    });
-  }
+  
 }

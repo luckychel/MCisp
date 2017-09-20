@@ -4,7 +4,7 @@ page-login {
   }
   .splash-bg {
     position: relative;
-    background-color: #4B8CF9;
+    background-color: #628cba;
     background-size: cover;
     height: 40%;
     z-index: 1;
@@ -46,7 +46,11 @@ page-login {
     }
   }
 
-  .footerToolbar .toolbar-background {
-      background: transparent;
+  .scroll-content{
+    padding-bottom:0px !important;
   }
+
+/*   .footerToolbar .toolbar-background {
+      background: transparent;
+  } */
 }

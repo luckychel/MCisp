@@ -12,7 +12,7 @@
 
       <ion-item>
         <ion-label fixed  class='fixedLabel'>Логин</ion-label>
-        <ion-input type="text" [(ngModel)]="account.username" name="username"></ion-input>
+        <ion-input type="text" [(ngModel)]="account.login" name="login"></ion-input>
       </ion-item>
     
       <ion-item>
@@ -21,26 +21,25 @@
       </ion-item>
 
       <ion-item>
-        <ion-checkbox [(ngModel)]="rememberme"  name="rememberme"></ion-checkbox>
+        <ion-checkbox [(ngModel)]="account.isRemember" name="isRemember"></ion-checkbox>
         <ion-label>Запомнить меня</ion-label>
       </ion-item>
-      
-      <div padding>
-       
-      </div>
 
     </ion-list>
-    
+
+    <div>
+      <button ion-button block item-right icon-left (click)="doLogin()">
+        <ion-icon name="person" style="color:white;font-size:26px;"></ion-icon>
+        <span style="font-weight: bold;color:white">Войти</span>
+      </button>
+    </div>
+
   </div>
 </ion-content>
 
-  <ion-footer no-border>
+  <!-- <ion-footer no-border>
   <ion-navbar class="footerToolbar">
-    <button ion-button block item-right icon-left (click)="doLogin()">
-        <ion-icon name="person" style="color:white;font-size:26px;"></ion-icon>
-        <span style="font-weight: bold;color:white">Войти</span>
-    </button>
-
+    
   </ion-navbar>
 
-</ion-footer>
+</ion-footer> -->

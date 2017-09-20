@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
 import { Platform, NavController, MenuController } from 'ionic-angular';
 
-import { BadgeProvider } from '../../providers/badge';
-import { MessagesProvider } from '../../providers/messages';
-import { Settings } from '../../providers/settings';
-import { User } from '../../providers/user';
+import { MessagesProvider } from '../../providers/messages/messages';
 
 @Component({
   selector: 'page-home',
@@ -13,14 +10,12 @@ import { User } from '../../providers/user';
 export class HomePage {
   
   unread: number = 0;
+  /* reg: boolean = false; */
 
   constructor(public platform: Platform,
     public navCtrl: NavController, 
     public menuCtrl: MenuController, 
-    public badgeProvider: BadgeProvider, 
-    public messageProvider: MessagesProvider,
-    public user: User,
-    public settings: Settings) {
+    public messagesProvider: MessagesProvider) {
 
   }
   
@@ -29,17 +24,13 @@ export class HomePage {
     this.refreshMessagesUnread();
   }
 
-  refreshMessagesUnread(){
-    this.messageProvider.getUnreadCount()
-    .then((res)=>{
-      res.subscribe((data)=>{
-        this.unread = parseInt(data);
-        this.badgeProvider.updateCnt(this.unread);
-      }, (err)=>{
-        alert(err);
-      });
-    }).catch((err)=>{
-      alert(err);
-    });
+  async refreshMessagesUnread(){
+    this.unread = await this.messagesProvider.getUnreadCount(true)
   }
+
+  /*
+    toggleReg(){ 
+    this.reg = !this.reg;
+    this.events.publish('user:registrationId', this.reg);
+  } */
 }

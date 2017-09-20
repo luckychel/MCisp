@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, NavParams, MenuController, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, MenuController, AlertController } from 'ionic-angular';
 import { MessagePage } from '../message/message';
 /* import { Item } from '../../models/item'; */
 
-import { Api } from '../../providers/api';
-import { Settings } from '../../providers/settings';
-import { BadgeProvider } from '../../providers/badge';
-import { MessagesProvider } from '../../providers/messages';
+import { DbProvider } from '../../providers/db/db';
+import { MessagesProvider } from '../../providers/messages/messages';
+import { LoaderProvider } from '../../providers/loader/loader';
 
 @Component({
   selector: 'page-messages',
@@ -22,33 +21,26 @@ export class MessagesPage {
     public navParams: NavParams, 
     public menuCtrl: MenuController, 
     public alertCtrl: AlertController,
-    public loadingCtrl: LoadingController, 
-    public settings: Settings, 
-    public api: Api, 
-    public badgeProvider: BadgeProvider, 
-    public messageProvider: MessagesProvider) {
+
+    public db: DbProvider,  
+    public messageProvider: MessagesProvider,
+    public loaderProvider: LoaderProvider) {
   }
 
-  getData(){
-    this.showLoader()
+  getData(isLoader = true){
+    if (isLoader) this.loaderProvider.show();
     this.items = [];
     this.messageProvider.getMessages()
-      .then((res)=>{
-        res.subscribe((data)=>{
-          if (res!== undefined && data.length > 0) {
-            for (let item of data) {
-              this.items.push(item);
-            }
+      .then((data)=>{
+        if (data!== undefined && data.length > 0) {
+          for (let item of data) {
+            this.items.push(item);
           }
-          this.hideLoader();
-        }, (err)=>{
-          alert(err);
-        })
+        }
+        if (isLoader) this.loaderProvider.hide();
     })
     .then(()=>{
-      this.refreshMessagesUnread();
-    }).catch((err)=>{
-      alert(err);
+      this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;});
     });
   }
 
@@ -57,23 +49,9 @@ export class MessagesPage {
     this.getData();
   }
 
-  refreshMessagesUnread(){
-    this.messageProvider.getUnreadCount()
-    .then((res)=>{
-      res.subscribe((data)=>{
-        this.unread = parseInt(data);
-        this.badgeProvider.updateCnt(this.unread);
-      }, (err)=>{
-        alert(err);
-      });
-    }).catch((err)=>{
-      alert(err);
-    });
-  }
-
    doRefresh(refresher) {
     setTimeout(() => {
-      this.getData();
+      this.getData(false);
       refresher.complete();
     }, 2000);
   }
@@ -91,22 +69,18 @@ export class MessagesPage {
       slidingItem.close();
     }     
 
-    this.api.post("messages/setread", {HIST_ID: p.hisT_ID})
-      .map(res => {
-        return res.json()
-      })
-      .subscribe((res)=>{
-          for (var i = 0; i< this.items.length; i++) {
-            if (this.items[i]["hisT_ID"] == p.hisT_ID)
-            {
-              this.items[i]["d_READ"] = new Date().getDate();
-              break;  
-            }
-          }
-          this.refreshMessagesUnread();
-      }, (err)=>{
-        alert(err);
-      });
+    this.messageProvider.setRead({HIST_ID: p.hisT_ID})
+    .then((res)=>{
+      for (var i = 0; i< this.items.length; i++) {
+        if (this.items[i]["hisT_ID"] == p.hisT_ID)
+        {
+          this.items[i]["d_READ"] = new Date().getDate();
+          break;  
+        }
+      }
+      this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;});
+    });
+    
   }
 
   setUnread(p, slidingItem) {
@@ -115,11 +89,8 @@ export class MessagesPage {
       slidingItem.close();
     }     
 
-    this.api.post("messages/setunread", {HIST_ID: p.hisT_ID})
-      .map(res => {
-        return res.json()
-      })
-      .subscribe((res)=>{
+    this.messageProvider.setUnread({HIST_ID: p.hisT_ID})
+      .then((res)=>{
           for (var i = 0; i< this.items.length; i++) {
             if (this.items[i]["hisT_ID"] == p.hisT_ID)
             {
@@ -127,10 +98,8 @@ export class MessagesPage {
               break;  
             }
           }
-          this.refreshMessagesUnread();
-      }, (err)=>{
-        alert(err);
-      });
+          this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;});
+      }); 
   }
 
   setDelete(p, slidingItem) {
@@ -143,21 +112,17 @@ export class MessagesPage {
           text: "OK",
           handler: () => {
             slidingItem.close();
-            this.api.post("messages/setdelete", {HIST_ID: p.hisT_ID})
-              .map(res => {
-                return res.json()
-              })
-              .subscribe((res)=>{
-                  for (var i = 0; i< this.items.length; i++) {
-                    if (this.items[i]["hisT_ID"] == p.hisT_ID)
-                    {
-                      this.items.splice(i, 1);
-                      break;  
-                    }
+            this.messageProvider.setDelete({HIST_ID: p.hisT_ID})
+              .then((res)=>{
+                for (var i = 0; i< this.items.length; i++) {
+                  if (this.items[i]["hisT_ID"] == p.hisT_ID)
+                  {
+                    this.items.splice(i, 1);
+                    break;  
                   }
-                  this.refreshMessagesUnread();
-              }, (err)=>{
-              });
+                }
+                this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;});
+              }); 
           }
         },
         {
@@ -167,22 +132,11 @@ export class MessagesPage {
             slidingItem.close();
           }
         }
-      ]
+      ],
+      cssClass: "warningCustomCss"
     });
     alert.present();
   }
 
-  showLoader(){
-    this.loader = this.loadingCtrl.create({
-      content: 'Пожалуйста подождите...'
-    });
-    this.loader.present();
-  }
-
-  hideLoader(){
-    setTimeout(() => {
-        this.loader.dismiss();
-    });
-  }
 }
 

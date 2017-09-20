@@ -15,12 +15,11 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
-.alertCustomCss{
-    background-color: white;
-}
-.alertCustomCss .alert-sub-title{
-    color:grey;
-}
+
 .registraionIdTrue{
     color: #0bff0b !important;
+}
+
+#mainmenu .scroll-content{
+    overflow-y: hidden;
 }

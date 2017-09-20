@@ -38,7 +38,10 @@ $colors: (
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #222,
+  color1 :    #628cba,
+  color2 :    #DAE3F3,
+  color3:     #3DBCC0
 );
 
 
@@ -53,8 +56,28 @@ $colors: (
 // --------------------------------------------------
 // Material Design only Sass variables can go here
 
+.alertCustomCss{
+  background-color: white;
+}
+.alertCustomCss .alert-title {
+  font-size:20px !important;
+}
+.alertCustomCss .alert-head {
+  background-color: #E5F1FF;
+}
+.alertCustomCss .alert-sub-title{
+  color:#6D6D6D;
+}
 
-
+.warningCustomCss{
+  background-color: white;
+}
+.warningCustomCss .alert-title {
+  font-size:20px !important;
+}
+.warningCustomCss .alert-head {
+  background-color: #FFF1D6;
+}
 
 // App Windows Variables
 // --------------------------------------------------

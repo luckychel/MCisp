@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { BadgeProvider } from '../../providers/badge';
-
+import { MessagesProvider } from '../../providers/messages/messages';
 
 @Component({
   selector: 'page-message',
@@ -12,14 +11,14 @@ export class MessagePage {
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
-    public badgeProvider: BadgeProvider
+     public messageProvider: MessagesProvider 
       ) 
   {
     this.item = navParams.get('item');
   }
 
   ionViewWillEnter() {
-    this.badgeProvider.update();
+     this.messageProvider.getUnreadCount(true);
   }
 
 }
