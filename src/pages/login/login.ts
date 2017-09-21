@@ -56,7 +56,7 @@ export class LoginPage {
       .then((res)=> {
         if (this.user._user.isAuth) 
         {
-          this.pushProvider.setup(this._user.molId)
+          this.pushProvider.setup(this.user._user.molId)
           .then(() => {
             this.navCtrl.setRoot(HomePage);
           });

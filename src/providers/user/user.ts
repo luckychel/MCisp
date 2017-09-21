@@ -33,7 +33,9 @@ export class UserProvider {
     
         let auth = Promise.all([t11, t12, t13])
         .then(() => this.api.post('auth', account)
-          .then(res => this._user = res.json()))
+          .then(res => {
+            this._user = res;
+          }))
           .catch((err)=> reject(new Error(err.message)))
         .catch((err)=> reject(new Error(err.message)));
 
@@ -68,7 +70,7 @@ export class UserProvider {
     let asyncTask = new Promise((resolve, reject) => {
       try {
         return this.api.get('auth')
-          .then(res => {
+          .then(() => {
             resolve(true);
           }).catch((err)=>{
             if (err !== undefined && err.message !== undefined) {
@@ -88,7 +90,7 @@ export class UserProvider {
   registration(userInfo: any){
     return this.api.post('mols/registration', userInfo)
       .then((res)=>{
-        return res.json();
+        return res;
       }).catch((err)=>{
         throw new Error(err.message || err.statusText);
       })

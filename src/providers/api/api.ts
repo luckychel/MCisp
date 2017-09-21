@@ -6,6 +6,9 @@ import { Network } from '@ionic-native/network';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/retry';
+import 'rxjs/add/operator/timeout';
+import 'rxjs/add/operator/delay';
 
 import { LoginPage } from '../../pages/login/login';
 
@@ -15,7 +18,7 @@ import { ToastProvider } from '../toast/toast';
 @Injectable()
 export class ApiProvider {
   url: string = 'http://services2.ssnab.ru:8020/api'; //http://services.ssnab.ru:8010/api'; //http://localhost:60544/api
-
+  timeOut: number = 10000; //выставляем тайм аут запроса в 10 сек
   constructor(public appCtrl: App, public http: Http, public network: Network, public db: DbProvider, public toastProvider: ToastProvider) {
     //console.log('Hello DbProvider Provider');
   }
@@ -33,12 +36,32 @@ export class ApiProvider {
       }
       options.search = !options.search && p || options.search;
     }
-    return this.http.get(this.url + '/' + endpoint, options).toPromise();
+    return this.http.get(this.url + '/' + endpoint, options)
+    .timeout(this.timeOut)
+    .toPromise()
+      .then((res) => { 
+        try {
+          return Promise.resolve(res.json());
+        } catch(err) {
+          return Promise.resolve(res);
+        }
+      })
+      .catch((err)=> this.checkOnError(err));
   }
 
   async post(endpoint: string, body: any, options?: RequestOptions) {
     this.checkNetworkConnection();
-    return this.http.post(this.url + '/' + endpoint, body, await this.getOptions(options)).toPromise();
+    return this.http.post(this.url + '/' + endpoint, body, await this.getOptions(options))
+    .timeout(this.timeOut)
+    .toPromise()
+      .then((res) => {
+        try {
+          return Promise.resolve(res.json());
+        } catch(err) {
+          return Promise.resolve(res);
+        }
+      })
+      .catch((err)=> this.checkOnError(err));
   }
 
 /*   async put(endpoint: string, body: any, options?: RequestOptions) {
@@ -81,28 +104,37 @@ export class ApiProvider {
     states["NONE"]     = 'No network connection';
 
     if (states[networkState] == "No network connection") {
-      throw new Error("Вы не подключены к сети интернет...");
+      throw new Error("Вы не подключены к сети интернет.");
     }
   }
 
   checkOnError(err){
     if (err != null)
     {
-      //"Unauthorized"
+      //Unauthorized
       if (err.status == 401)
       {
-        this.toastProvider.show("Вы не авторизованы. Пожалуйста зайдите снова.");
+        this.toastProvider.show("Вы не авторизованы. Пожалуйста зайдите снова.")
+        .then(()=>{
+          this.appCtrl.getRootNav().setRootPage(LoginPage);
+        });
+      }
+      //Timeout
+      else if (err.message.toString().indexOf("Timeout") >= 0)
+      {
+        throw new Error("Превышен таймаут выполнения запроса.")
       }
       else
       {
-        this.toastProvider.show("Проблемы с подключением к серверу. Пожалуйста зайдите снова.");
+        throw new Error(err);
       }
     }
     else
     {
-      this.toastProvider.show("Что-то пошло не так...");
+      this.toastProvider.show("Что-то пошло не так...").then(()=>{
+        this.appCtrl.getRootNav().setRootPage(LoginPage);
+      });
     }
-    this.appCtrl.getRootNav().setRootPage(LoginPage);
   }
  
 }

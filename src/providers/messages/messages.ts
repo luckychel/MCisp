@@ -18,7 +18,7 @@ export class MessagesProvider {
       .then((molId) => {
           return this.api.get("messages/" + molId)
           .then((res) => {
-              return res.json()
+              return res
             });
       });
   }
@@ -28,7 +28,7 @@ export class MessagesProvider {
     .then((molId) => {
        return this.api.get('messages/unread/' + molId)
         .then((res) => {
-          let unread = parseInt(res.json())
+          let unread = parseInt(res);
           if (isBadgeUpdate)
             this.badgeProvider.updateCnt(unread);
           return unread;

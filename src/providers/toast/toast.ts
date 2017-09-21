@@ -14,7 +14,7 @@ export class ToastProvider {
       duration: 3000,
       position: 'top'
     });
-    toast.present();
+    return Promise.resolve(toast.present());
   }
 
 }

@@ -5,6 +5,7 @@ import { AppVersion } from '@ionic-native/app-version';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HeaderColor } from '@ionic-native/header-color';
+import { Network } from '@ionic-native/network';
 
 import { LoginPage} from '../pages/login/login';
 import { HomePage } from '../pages/home/home';
@@ -50,6 +51,7 @@ export class MyApp {
     public messagesProvider: MessagesProvider,
     public pushProvider: PushProvider,
     public dom: DomSanitizer,
+    public network: Network
   )
     {
       //Наполнение меню
@@ -87,6 +89,21 @@ export class MyApp {
         this.registrationId = val;
       });
 
+      //проверка на подключение к сети
+      this.network.onDisconnect().subscribe(() => {
+        this.toastProvider.show("Вы не подключены к сети интернет").then(()=>{
+          this.setRootPage(LoginPage);
+        });
+      });
+
+      this.network.onConnect().subscribe(() => {
+        if (this.network.type !== 'none') {
+          setTimeout(() => {
+            this.toastProvider.show("Подключение к сети восстановлено")
+          }, 3000);
+        }
+      });
+
       this._user = this.user._user;
       
       this.getDbData().then(()=>{
@@ -104,7 +121,6 @@ export class MyApp {
           //console.log("проверка токена: " + this._user.serverToken); 
           //проверка
           this.user.checkToken().then(() => {
-
             //если токен валидный пускаем
             this.pushProvider.setup(this._user.molId)
             .then(()=> {
