@@ -124,7 +124,7 @@ export class PushProvider {
   }
 
   setRootPage(page: any) {
-    this.appCtrl.getRootNav().setRootPage(page);
+    this.appCtrl.getRootNav().setRoot(page);
   }
 
   showAlert(notification) {

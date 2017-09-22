@@ -19,8 +19,8 @@ import { ToastProvider } from '../toast/toast';
 export class ApiProvider {
   url: string = 'http://services2.ssnab.ru:8020/api'; //http://services.ssnab.ru:8010/api'; //http://localhost:60544/api
   timeOut: number = 10000; //выставляем тайм аут запроса в 10 сек
+    
   constructor(public appCtrl: App, public http: Http, public network: Network, public db: DbProvider, public toastProvider: ToastProvider) {
-    //console.log('Hello DbProvider Provider');
   }
 
   async get(endpoint: string, params?: any, options?: RequestOptions) {
@@ -46,7 +46,11 @@ export class ApiProvider {
           return Promise.resolve(res);
         }
       })
-      .catch((err)=> this.checkOnError(err));
+      .catch((err)=> 
+      {
+        this.checkOnError(err)
+        return Promise.reject(err)
+      });
   }
 
   async post(endpoint: string, body: any, options?: RequestOptions) {
@@ -61,7 +65,10 @@ export class ApiProvider {
           return Promise.resolve(res);
         }
       })
-      .catch((err)=> this.checkOnError(err));
+      .catch((err)=> {
+        this.checkOnError(err)
+        return Promise.reject(err)
+      });
   }
 
 /*   async put(endpoint: string, body: any, options?: RequestOptions) {
@@ -109,6 +116,7 @@ export class ApiProvider {
   }
 
   checkOnError(err){
+    var nav = this.appCtrl.getRootNav();
     if (err != null)
     {
       //Unauthorized
@@ -116,7 +124,7 @@ export class ApiProvider {
       {
         this.toastProvider.show("Вы не авторизованы. Пожалуйста зайдите снова.")
         .then(()=>{
-          this.appCtrl.getRootNav().setRootPage(LoginPage);
+          nav.setRoot(LoginPage);
         });
       }
       //Timeout
@@ -132,7 +140,7 @@ export class ApiProvider {
     else
     {
       this.toastProvider.show("Что-то пошло не так...").then(()=>{
-        this.appCtrl.getRootNav().setRootPage(LoginPage);
+        nav.setRoot(LoginPage);
       });
     }
   }

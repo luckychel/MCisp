@@ -41,6 +41,8 @@ export class MessagesPage {
     })
     .then(()=>{
       this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;});
+    }).catch((err)=>{
+      if (isLoader) this.loaderProvider.hide();
     });
   }
 

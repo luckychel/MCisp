@@ -137,6 +137,7 @@ export class MyApp {
         }
       }).catch((err)=>{
         this.toastProvider.show(err.message);
+        this.setRootPage(LoginPage);
       })
     });
   }

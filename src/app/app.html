@@ -1,5 +1,5 @@
-<ion-menu [content]="content" side="left" id="mainmenu">
-  <ion-header >
+<ion-menu [content]="content" type="overlay" side="left" id="mainmenu">
+<!--   <ion-header >
     <ion-toolbar color="color1">
       <ion-title>
         <ion-avatar item-left>
@@ -11,17 +11,34 @@
         <span style="font-size:12px;margin-right:10px;color:#fff;">Версия: {{version}}</span>
       </ion-buttons>
     </ion-toolbar>
-  </ion-header>
+  </ion-header> -->
 
   <ion-content>
     <ion-list>
-      <button menuClose icon-end ion-item *ngFor="let p of pages" (click)="openPage(p)" style="position:relative;padding-left:0px;">
+      <ion-item color="color1" style="height:120px;padding-left:5px;">
+        <ion-grid>
+          <ion-row>
+              <ion-col col-4>
+                  <img [src]='dom.bypassSecurityTrustUrl(user._user.molPhoto)' style="width:77px;height:77px" alt="photo">
+              </ion-col>
+              <ion-col col-8 style="text-align:right;">
+                  <span style="font-size:12px;color:#fff;">Версия: {{version}}</span> 
+              </ion-col>
+          </ion-row> 
+          <ion-row> 
+            <ion-col col-12 style="text-align:left;">
+              <span style="font-size:14px;">{{user._user.molName}}</span>
+            </ion-col>
+          </ion-row>   
+        </ion-grid>
+      </ion-item>
+      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" style="position:relative;padding-left:0px;">
         <span style="padding-left:16px;">{{p.title}}</span>
-        <span *ngIf="p.component.name=='MessagesPage'" style="color:red;float:right;" [ngClass]="{'registraionIdTrue': registrationId}">
+        <span tem-end *ngIf="p.component.name=='MessagesPage'" style="color:red;float:right;" [ngClass]="{'registraionIdTrue': registrationId}">
           <ion-icon name="md-bulb" style="color:red" [ngClass]="{'registraionIdTrue': registrationId}"></ion-icon> Push
         </span>
       </button>
-      <button ion-item (click)="logout()" style="padding-left:0px;">
+      <button menuClose ion-item (click)="logout()" style="padding-left:0px;">
           <span style="padding-left:16px;">Сменить пользователя</span>
       </button>
     </ion-list>
