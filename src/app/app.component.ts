@@ -91,9 +91,12 @@ export class MyApp {
 
       //проверка на подключение к сети
       this.network.onDisconnect().subscribe(() => {
-        this.toastProvider.show("Вы не подключены к сети интернет").then(()=>{
+        if (this.network.type === 'none') {
+          this.toastProvider.show("Соединение с интернетом потеряно")
+        }
+        /* .then(()=>{
           this.setRootPage(LoginPage);
-        });
+        }); */
       });
 
       this.network.onConnect().subscribe(() => {
@@ -108,19 +111,20 @@ export class MyApp {
       
       this.getDbData().then(()=>{
 
-      /*   console.log("serverToken: " + this._user.serverToken); 
+  /*       console.log("serverToken: " + this._user.serverToken); 
         console.log("login: " + this._user.login);
         console.log("password: " + this._user.password);
         console.log("molId: " + this._user.molId);
         console.log("molName: " + this._user.molName); 
-        console.log("isAuth: " + this._user.isAuth); 
- */
+        console.log("isAuth: " + this._user.isAuth);  */
+        
         //вход с токеном
         if (this._user.serverToken !== "" && this._user.isRemember && this._user.isAuth)
         {
-          //console.log("проверка токена: " + this._user.serverToken); 
+         /*  console.log("проверка токена: " + this._user.serverToken);  */
           //проверка
           this.user.checkToken().then(() => {
+            
             //если токен валидный пускаем
             this.pushProvider.setup(this._user.molId)
             .then(()=> {
@@ -128,7 +132,9 @@ export class MyApp {
             });
            
           }).catch((err)=>{
-            this.toastProvider.show(err.message);
+            if (err.message) {
+              this.toastProvider.show(err.message);
+            }
             this.setRootPage(LoginPage);
           });
         }
@@ -136,7 +142,9 @@ export class MyApp {
           this.setRootPage(LoginPage);
         }
       }).catch((err)=>{
-        this.toastProvider.show(err.message);
+        if (err.message) {
+          this.toastProvider.show(err.message);
+        }
         this.setRootPage(LoginPage);
       })
     });
@@ -187,7 +195,7 @@ export class MyApp {
         })
         .catch((err)=>{
           this.loaderProvider.hide();
-          new Error(err.message)
+          this.nav.setRoot(LoginPage);
         });
   }
   

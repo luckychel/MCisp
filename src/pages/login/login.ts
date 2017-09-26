@@ -67,7 +67,9 @@ export class LoginPage {
         this.loaderProvider.hide();
       })
       .catch((err)=>{
-        this.toastProvider.show("Ошибка авторизации! " + err.message);
+        if (err.message) {
+          this.toastProvider.show("Ошибка авторизации! " + err.message);
+        }
         this.loaderProvider.hide();
       })
   }

@@ -6,6 +6,8 @@ import { MessagePage } from '../message/message';
 import { DbProvider } from '../../providers/db/db';
 import { MessagesProvider } from '../../providers/messages/messages';
 import { LoaderProvider } from '../../providers/loader/loader';
+import { ToastProvider } from '../../providers/toast/toast';
+
 
 @Component({
   selector: 'page-messages',
@@ -24,7 +26,8 @@ export class MessagesPage {
 
     public db: DbProvider,  
     public messageProvider: MessagesProvider,
-    public loaderProvider: LoaderProvider) {
+    public loaderProvider: LoaderProvider,
+  public toastProvider: ToastProvider) {
   }
 
   getData(isLoader = true){
@@ -42,7 +45,11 @@ export class MessagesPage {
     .then(()=>{
       this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;});
     }).catch((err)=>{
-      if (isLoader) this.loaderProvider.hide();
+      if (isLoader) 
+        this.loaderProvider.hide();
+        if (err.message) {
+          this.toastProvider.show(err.message);
+        }
     });
   }
 
@@ -59,9 +66,10 @@ export class MessagesPage {
   }
 
   openItem(item) {
-    this.setRead(item, undefined);
-    this.navCtrl.push(MessagePage, {
-      item: item
+    this.setRead(item, undefined).then(()=>{
+      this.navCtrl.push(MessagePage, {
+        item: item
+      });
     });
   }
 
@@ -71,7 +79,7 @@ export class MessagesPage {
       slidingItem.close();
     }     
 
-    this.messageProvider.setRead({HIST_ID: p.hisT_ID})
+    return this.messageProvider.setRead({HIST_ID: p.hisT_ID})
     .then((res)=>{
       for (var i = 0; i< this.items.length; i++) {
         if (this.items[i]["hisT_ID"] == p.hisT_ID)
@@ -80,9 +88,13 @@ export class MessagesPage {
           break;  
         }
       }
-      this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;});
+    })
+    .then(() => this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;}))
+    .catch((err)=>{
+      if (err.message) {
+        this.toastProvider.show(err.message);
+      }
     });
-    
   }
 
   setUnread(p, slidingItem) {
@@ -91,7 +103,7 @@ export class MessagesPage {
       slidingItem.close();
     }     
 
-    this.messageProvider.setUnread({HIST_ID: p.hisT_ID})
+    return this.messageProvider.setUnread({HIST_ID: p.hisT_ID})
       .then((res)=>{
           for (var i = 0; i< this.items.length; i++) {
             if (this.items[i]["hisT_ID"] == p.hisT_ID)
@@ -100,8 +112,13 @@ export class MessagesPage {
               break;  
             }
           }
-          this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;});
-      }); 
+      })
+      .then(() => this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;}))
+      .catch((err)=>{
+        if (err.message) {
+          this.toastProvider.show(err.message);
+        }
+      });
   }
 
   setDelete(p, slidingItem) {
@@ -123,7 +140,12 @@ export class MessagesPage {
                     break;  
                   }
                 }
-                this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;});
+              })
+              .then(() => this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;}))
+              .catch((err)=>{
+                if (err.message) {
+                  this.toastProvider.show(err.message);
+                }
               }); 
           }
         },

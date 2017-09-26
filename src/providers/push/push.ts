@@ -66,7 +66,7 @@ export class PushProvider {
             //прочтено
             if (notification.additionalData.msgHistId != null)
               {
-                this.api.post("messages/setread", {HIST_ID: notification.additionalData.msgHistId})
+                this.messagesProvider.setRead({HIST_ID: notification.additionalData.msgHistId})
                 .then(()=>{
                   if (notification.additionalData.foreground) {
                     this.showAlert(notification);
@@ -74,12 +74,16 @@ export class PushProvider {
                     this.goToMessages(notification);
                   }
                 }).catch((err)=>{
-                  this.toastProvider.show(err.message);
+                  if (err.message) {
+                    this.toastProvider.show(err.message);
+                  }
                   this.setRootPage(LoginPage);
                 });
               }
             }).catch((err)=>{
-              this.toastProvider.show(err.message);
+              if (err.message) {
+                this.toastProvider.show(err.message);
+              }
               this.setRootPage(LoginPage);
             });
           }

@@ -26,6 +26,7 @@ export class UserProvider {
   login(account: any) {
 
     let asyncTask = new Promise((resolve, reject) => {
+      
       try {
         let t11 = this.db.setValue('login', account.isRemember ? account.login : "");
         let t12 = this.db.setValue('password', account.isRemember ? account.password : "");
@@ -36,8 +37,12 @@ export class UserProvider {
           .then(res => {
             this._user = res;
           }))
-          .catch((err)=> reject(new Error(err.message)))
-        .catch((err)=> reject(new Error(err.message)));
+          .catch((err)=> {
+             reject(new Error(err.message))
+          })
+        .catch((err)=> {
+          reject(new Error(err.message))
+        });
 
         return Promise.all([auth])
           .then(()=> {
@@ -73,7 +78,7 @@ export class UserProvider {
           .then(() => {
             resolve(true);
           }).catch((err)=>{
-            if (err !== undefined && err.message !== undefined) {
+            if (err && err.message) {
               reject(new Error(err.message));
               return
             } 

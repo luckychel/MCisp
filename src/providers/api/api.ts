@@ -39,7 +39,6 @@ export class ApiProvider {
       .timeout(this.timeOut)
       .toPromise()
         .then((res) => { 
-          debugger
           try {
             return Promise.resolve(res.json());
           } catch(err) {
@@ -48,12 +47,10 @@ export class ApiProvider {
         })
         .catch((err)=> 
         {
-          debugger
           this.checkOnError(err)
           return Promise.reject(err)
         });
     }).catch((err)=>{
-      debugger
       return Promise.reject(err)
     });
     
@@ -69,7 +66,6 @@ export class ApiProvider {
             .timeout(this.timeOut)
             .toPromise()
               .then((res) => {
-                debugger
                 try {
                   return Promise.resolve(res.json());
                 } catch(err) {
@@ -77,12 +73,10 @@ export class ApiProvider {
                 }
               })
               .catch((err)=> {
-                debugger
                 this.checkOnError(err)
                 return Promise.reject(err)
               });
     }).catch((err)=>{
-      debugger
       return Promise.reject(err)
     });
     
@@ -128,11 +122,14 @@ export class ApiProvider {
     states["NONE"]     = 'No network connection';
 
     if (states[networkState] == "No network connection") {
-      let pr = this.toastProvider.show("Вы не подключены к сети интернет.");
-      return Promise.reject(pr)
+      return this.toastProvider.show("Вы не подключены к сети интернет.").then(()=>{
+        return Promise.reject(new Error())
+      });
     }
     else 
+    { 
       return Promise.resolve();
+    }
   }
 
   checkOnError(err){
@@ -148,7 +145,7 @@ export class ApiProvider {
         });
       }
       //Timeout
-      else if (err.message !== undefined && err.message.toString().indexOf("Timeout") >= 0)
+      else if (err.message && err.message.toString().indexOf("Timeout") >= 0)
       {
         throw new Error("Превышен таймаут выполнения запроса.")
       }
