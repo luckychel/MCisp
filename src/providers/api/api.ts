@@ -23,52 +23,69 @@ export class ApiProvider {
   constructor(public appCtrl: App, public http: Http, public network: Network, public db: DbProvider, public toastProvider: ToastProvider) {
   }
 
-  async get(endpoint: string, params?: any, options?: RequestOptions) {
+  async get(endpoint: string, params?: any, options?: RequestOptions) : Promise<any> {
 
-    this.checkNetworkConnection();
-    
-    options =  await this.getOptions(options);
-
-    if (params) {
-      let p = new URLSearchParams();
-      for (let k in params) {
-        p.set(k, params[k]);
-      }
-      options.search = !options.search && p || options.search;
-    }
-    return this.http.get(this.url + '/' + endpoint, options)
-    .timeout(this.timeOut)
-    .toPromise()
-      .then((res) => { 
-        try {
-          return Promise.resolve(res.json());
-        } catch(err) {
-          return Promise.resolve(res);
+    return this.checkNetworkConnection().then(async ()=>{
+      options =  await this.getOptions(options);
+  
+      if (params) {
+        let p = new URLSearchParams();
+        for (let k in params) {
+          p.set(k, params[k]);
         }
-      })
-      .catch((err)=> 
-      {
-        this.checkOnError(err)
-        return Promise.reject(err)
-      });
+        options.search = !options.search && p || options.search;
+      }
+      return this.http.get(this.url + '/' + endpoint, options)
+      .timeout(this.timeOut)
+      .toPromise()
+        .then((res) => { 
+          debugger
+          try {
+            return Promise.resolve(res.json());
+          } catch(err) {
+            return Promise.resolve(res);
+          }
+        })
+        .catch((err)=> 
+        {
+          debugger
+          this.checkOnError(err)
+          return Promise.reject(err)
+        });
+    }).catch((err)=>{
+      debugger
+      return Promise.reject(err)
+    });
+    
+    
   }
 
-  async post(endpoint: string, body: any, options?: RequestOptions) {
-    this.checkNetworkConnection();
-    return this.http.post(this.url + '/' + endpoint, body, await this.getOptions(options))
-    .timeout(this.timeOut)
-    .toPromise()
-      .then((res) => {
-        try {
-          return Promise.resolve(res.json());
-        } catch(err) {
-          return Promise.resolve(res);
-        }
-      })
-      .catch((err)=> {
-        this.checkOnError(err)
-        return Promise.reject(err)
-      });
+  async post(endpoint: string, body: any, options?: RequestOptions) : Promise<any> {
+    
+    return this.checkNetworkConnection()
+    .then(async ()=>{
+        options =  await this.getOptions(options);
+          return this.http.post(this.url + '/' + endpoint, body, await this.getOptions(options))
+            .timeout(this.timeOut)
+            .toPromise()
+              .then((res) => {
+                debugger
+                try {
+                  return Promise.resolve(res.json());
+                } catch(err) {
+                  return Promise.resolve(res);
+                }
+              })
+              .catch((err)=> {
+                debugger
+                this.checkOnError(err)
+                return Promise.reject(err)
+              });
+    }).catch((err)=>{
+      debugger
+      return Promise.reject(err)
+    });
+    
   }
 
 /*   async put(endpoint: string, body: any, options?: RequestOptions) {
@@ -96,9 +113,9 @@ export class ApiProvider {
     return options;
   }
 
-  checkNetworkConnection(){
+  checkNetworkConnection(): Promise<void>{
     var networkState = (this.network.type || "").toUpperCase();
-    if (networkState === "") return "";
+    if (networkState === "") return Promise.resolve();
 
     var states = {};
     states["UNKNOWN"]  = 'Unknown connection';
@@ -111,8 +128,11 @@ export class ApiProvider {
     states["NONE"]     = 'No network connection';
 
     if (states[networkState] == "No network connection") {
-      throw new Error("Вы не подключены к сети интернет.");
+      let pr = this.toastProvider.show("Вы не подключены к сети интернет.");
+      return Promise.reject(pr)
     }
+    else 
+      return Promise.resolve();
   }
 
   checkOnError(err){
@@ -128,7 +148,7 @@ export class ApiProvider {
         });
       }
       //Timeout
-      else if (err.message.toString().indexOf("Timeout") >= 0)
+      else if (err.message !== undefined && err.message.toString().indexOf("Timeout") >= 0)
       {
         throw new Error("Превышен таймаут выполнения запроса.")
       }
