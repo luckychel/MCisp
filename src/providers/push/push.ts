@@ -91,10 +91,10 @@ export class PushProvider {
 
         pushObject.on('registration').subscribe((registration: any) => {
 
-     /*      console.log("push registration");
+          /* console.log("===============push registration===============");
           console.log("mol_id =" +  molId);
-          console.log("registration = " + registration.registrationId); */
-
+          console.log("registration = " + registration.registrationId);
+ */
           let t1 = this.db.setValue('registrationId', registration.registrationId);
       
           let t2 = this.user.registration({
@@ -105,6 +105,7 @@ export class PushProvider {
 
           return Promise.all([t1, t2])
           .then(()=> {
+           /*  console.log("==================Красим в зеленый================="); */
             //зеленый индикатор push
             this.events.publish('user:registrationId', true);
           });

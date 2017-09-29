@@ -18,6 +18,7 @@ export class MessagesProvider {
       .then((molId) => {
           return this.api.get("messages/" + molId)
           .then((res) => {
+              //console.log("Сообщения: " + JSON.stringify(res))
               return res
             });
       });

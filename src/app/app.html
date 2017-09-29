@@ -18,10 +18,10 @@
       <ion-item color="color1" style="height:120px;padding-left:5px;">
         <ion-grid>
           <ion-row>
-              <ion-col col-4>
+              <ion-col col-5>
                   <img [src]='dom.bypassSecurityTrustUrl(user._user.molPhoto)' style="width:77px;height:77px" alt="photo">
               </ion-col>
-              <ion-col col-8 style="text-align:right;">
+              <ion-col col-7 style="text-align:right;">
                   <span style="font-size:12px;color:#fff;">Версия: {{version}}</span> 
               </ion-col>
           </ion-row> 
@@ -34,7 +34,7 @@
       </ion-item>
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" style="position:relative;padding-left:0px;">
         <span style="padding-left:16px;">{{p.title}}</span>
-        <span tem-end *ngIf="p.component.name=='MessagesPage'" style="color:red;float:right;" [ngClass]="{'registraionIdTrue': registrationId}">
+        <span item-end *ngIf="p.component.name=='MessagesPage'" style="color:red;float:right;" [ngClass]="{'registraionIdTrue': registrationId}">
           <ion-icon name="md-bulb" style="color:red" [ngClass]="{'registraionIdTrue': registrationId}"></ion-icon> Push
         </span>
       </button>
