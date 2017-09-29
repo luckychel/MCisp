@@ -37,6 +37,7 @@ export class MessagesPage {
       .then((data)=>{
         if (data!== undefined && data.length > 0) {
           for (let item of data) {
+            /* console.log("Сообщения: " + JSON.stringify(item)); */
             this.items.push(item);
           }
         }

@@ -11,6 +11,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Push } from '@ionic-native/push';
 import { HeaderColor } from '@ionic-native/header-color';
 import { Badge } from '@ionic-native/badge';
+import { MomentModule } from 'angular2-moment';
 
 import { MyApp } from './app.component';
 
@@ -42,8 +43,8 @@ import { ToastProvider } from '../providers/toast/toast';
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
-    
+    IonicStorageModule.forRoot(),
+    MomentModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

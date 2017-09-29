@@ -25,7 +25,7 @@
       <button ion-item (click)="openItem(item)">
         <h2 [ngClass]="{'cbold': item.d_READ == null}" [innerHTML]="item.title"></h2>
         <p [ngClass]="{'cbold': item.d_READ == null}" [innerHTML]="item.body"></p>
-        <ion-note [ngClass]="{'cbold': item.d_READ == null}" item-end style="font-size:9px;">{{item.d_ADD | date: 'dd.MM.yyyy H:mm'}}</ion-note>
+        <ion-note [ngClass]="{'cbold': item.d_READ == null}" item-end style="font-size:9px;">{{item.d_ADD | amDateFormat: 'DD.MM.YYYY HH:mm'}}</ion-note>
       </button>
       
       <ion-item-options side="left" *ngIf="item.d_READ != null">

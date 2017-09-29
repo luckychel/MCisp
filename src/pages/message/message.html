@@ -13,7 +13,7 @@
       <span [innerHTML]="item.title"></span>
       <br />
       <strong>Дата: </strong>
-      <span>{{item.d_ADD | date: 'dd.MM.yyyy H:mm'}}</span>
+      <span>{{item.d_ADD | amDateFormat: 'DD.MM.YYYY HH:mm'}}</span>
     </ion-card-header>
     
     <ion-card-content>
