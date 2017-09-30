@@ -34,7 +34,7 @@
       </ion-item>
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" style="position:relative;padding-left:0px;">
         <span style="padding-left:16px;">{{p.title}}</span>
-        <span item-end *ngIf="p.component.name=='MessagesPage'" style="color:red;float:right;" [ngClass]="{'registraionIdTrue': registrationId}">
+        <span item-end *ngIf="p.title=='Сообщения'" style="color:red;float:right;" [ngClass]="{'registraionIdTrue': registrationId}">
           <ion-icon name="md-bulb" style="color:red" [ngClass]="{'registraionIdTrue': registrationId}"></ion-icon> Push
         </span>
       </button>
