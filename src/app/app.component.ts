@@ -10,7 +10,7 @@ import { Network } from '@ionic-native/network';
 import { LoginPage} from '../pages/login/login';
 import { HomePage } from '../pages/home/home';
 import { MessagesPage } from '../pages/messages/messages';
-/* import { MessagePage } from '../pages/message/message'; */
+//import { PricePage } from '../pages/price/price';
 
 import { DbProvider } from '../providers/db/db';
 import { UserProvider } from '../providers/user/user';
@@ -57,7 +57,8 @@ export class MyApp {
       //Наполнение меню
        this.pages = [
           { title: 'Главная', component: HomePage },
-          { title: 'Сообщения', component: MessagesPage }
+          { title: 'Сообщения', component: MessagesPage },
+          //{ title: 'Прайс лист', component: PricePage }, пока убираем
         ];
 
       this.initializeApp();

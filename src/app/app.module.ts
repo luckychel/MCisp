@@ -19,6 +19,8 @@ import { LoginPage} from '../pages/login/login';
 import { HomePage } from '../pages/home/home';
 import { MessagesPage } from '../pages/messages/messages';
 import { MessagePage } from '../pages/message/message';
+import { PricePage } from '../pages/price/price';
+import { PriceFilterPage } from '../pages/price-filter/price-filter';
 
 import { ApiProvider } from '../providers/api/api';
 import { DbProvider } from '../providers/db/db';
@@ -37,7 +39,9 @@ import { ToastProvider } from '../providers/toast/toast';
     LoginPage,
     HomePage,
     MessagesPage,
-    MessagePage
+    MessagePage,
+    PricePage,
+    PriceFilterPage
   ],
   imports: [
     BrowserModule,
@@ -52,7 +56,9 @@ import { ToastProvider } from '../providers/toast/toast';
     LoginPage,
     HomePage,
     MessagesPage,
-    MessagePage
+    MessagePage,
+    PricePage,
+    PriceFilterPage
   ],
   providers: [
     StatusBar,
