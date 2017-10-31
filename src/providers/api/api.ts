@@ -62,7 +62,7 @@ export class ApiProvider {
     return this.checkNetworkConnection()
     .then(async ()=>{
         options =  await this.getOptions(options);
-          return this.http.post(this.url + '/' + endpoint, body, await this.getOptions(options))
+          return this.http.post(this.url + '/' + endpoint, body, options)
             .timeout(this.timeOut)
             .toPromise()
               .then((res) => {
@@ -99,10 +99,13 @@ export class ApiProvider {
 
 
   async getOptions(options){
-    let serverToken = await this.db.getValue("serverToken").then((res) => { return res });
 
+    let serverToken = await this.db.getValue("serverToken").then((res) => { return res });
     if (!options) options = new RequestOptions();
-    let headers = new Headers({ 'Authorization': 'Bearer ' + serverToken });
+    let headers = new Headers();
+    if (serverToken) {
+      headers.append('Authorization', 'Bearer ' + serverToken);
+    }
     options.headers = headers;
     return options;
   }

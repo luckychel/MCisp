@@ -1,13 +1,16 @@
 page-login {
+
   .content{
     background-color: #f5f5f5;
   }
+
   .splash-bg {
     position: relative;
     background-color: #628cba;
     background-size: cover;
     height: 40%;
     z-index: 1;
+    top:-20px;
   }
 
   .splash-info {
@@ -15,19 +18,26 @@ page-login {
     z-index: 2;
     margin-top: -64px;
     text-align: center;
+    top:-5px;
   }
+
   .splash-logo {
+    position: relative;
     margin: auto;
     background: url('../assets/img/appicon.png') repeat transparent;
     background-size: 100%;
     width: 128px;
     height: 128px;
+    top:-17px;
   }
+
   .splash-intro {
+    position: relative;
     margin: 10px auto;
     font-size: 18px;
     font-weight: bold;
     max-width: 80%;
+    top:-20px;
   }
 
   .fixedLabel {
@@ -48,6 +58,11 @@ page-login {
 
   .scroll-content{
     padding-bottom:0px !important;
+  }
+
+  .login-content{
+    position: relative;
+    top:-40px;
   }
 
 /*   .footerToolbar .toolbar-background {
