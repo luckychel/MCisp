@@ -103,7 +103,7 @@ export class ApiProvider {
     let serverToken = await this.db.getValue("serverToken").then((res) => { return res });
     if (!options) options = new RequestOptions();
     let headers = new Headers();
-    if (serverToken) {
+    if (serverToken) { 
       headers.append('Authorization', 'Bearer ' + serverToken);
     }
     options.headers = headers;
