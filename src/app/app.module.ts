@@ -12,6 +12,7 @@ import { Push } from '@ionic-native/push';
 import { HeaderColor } from '@ionic-native/header-color';
 import { Badge } from '@ionic-native/badge';
 import { MomentModule } from 'angular2-moment';
+import { MCispComponentModule } from '../component/mcisp.component.module'
 
 import { MyApp } from './app.component';
 
@@ -31,6 +32,13 @@ import { PushProvider } from '../providers/push/push';
 import { LoaderProvider } from '../providers/loader/loader';
 import { AlertProvider } from '../providers/alert/alert';
 import { ToastProvider } from '../providers/toast/toast';
+
+//#region Price
+import { PriceProvider } from '../providers/price/price';
+import { BunkProvider } from '../providers/price/pickers/bunk/bunk';
+import { BunkTovProvider } from '../providers/price/pickers/bunktov/bunktov';
+//#endregion
+
 /* import { MyAppProvider } from '../providers/my-app/my-app'; */
 
 @NgModule({
@@ -48,7 +56,8 @@ import { ToastProvider } from '../providers/toast/toast';
     HttpModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    MomentModule
+    MomentModule,
+    MCispComponentModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -78,6 +87,10 @@ import { ToastProvider } from '../providers/toast/toast';
     LoaderProvider,
     AlertProvider,
     ToastProvider,
+    PriceProvider,
+    BunkProvider,
+    BunkTovProvider,
+    
 /*     MyAppProvider */
   ]
 })

@@ -6,5 +6,42 @@
 
 
 <ion-content padding>
-    Расширенный поиск
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
+        <input name="first" ngModel required #first="ngModel">
+        <input name="last" ngModel #last="ngModel">
+        
+        <ion-grid>
+          <ion-row>
+            <ion-col col-12 style="position:relative;">
+              <input type="hidden" [(ngModel)]="filter.BUNK_ID" name="BUNK_ID" #BUNK_ID="ngModel">
+              <ion-searchbar [(ngModel)]="filter.BUNK" name="BUNK" (input)="getItems($event, BUNK_ID)" (ionClear)="onClear($event, BUNK_ID)" [showCancelButton]="false" [debounce]="500" placeholder="Склад"></ion-searchbar>
+              <ion-list *ngIf="showBunks" style="width:100%;position:absolute;z-index: 1; border: 1px solid #dedede; margin-top:-5px;">
+                <ion-item *ngFor="let item of items" class="sItemList" (click)="clickItem(item, BUNK_ID);" style="border-bottom: 1px solid #D0050B;"> 
+                    <span style="display:none;">{{item.id}}</span><span>{{item.name}}</span>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col col-12 style="position:relative;padding:0px;">
+              <input type="hidden" [(ngModel)]="filter.BUNKTOV_DEPT_ID" name="BUNKTOV_DEPT_ID" #BUNKTOV_DEPT_ID="ngModel">
+              <ion-searchbar [(ngModel)]="filter.BUNKTOV_DEPT" name="BUNKTOV_DEPT" (input)="getItems($event, BUNKTOV_DEPT_ID)" (ionClear)="onClear($event, BUNKTOV_DEPT_ID)" [showCancelButton]="false" [debounce]="500" placeholder="Отдел"></ion-searchbar>
+              <ion-list *ngIf="showBunksTovs" style="width:100%;position:absolute;z-index: 1; border: 1px solid #dedede; margin-top:-5px;">
+                <ion-item *ngFor="let item of items" class="sItemList" (click)="clickItem(item, BUNKTOV_DEPT_ID);" style="border-bottom: 1px solid #D0050B;"> 
+                    <span style="display:none;">{{item.id}}</span><span>{{item.name}}</span>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+
+          <ion-row justify-content-between>
+              <ion-col col-12 style="text-align:right">
+                  <button type="submit" ion-button color="primary">Применить</button>    
+                  <button type="reset" ion-button color="warning">Очистить</button>
+              </ion-col>
+          </ion-row>
+        </ion-grid>
+      
+    </form>
 </ion-content>
