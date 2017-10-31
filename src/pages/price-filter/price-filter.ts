@@ -45,65 +45,8 @@ export class PriceFilterPage {
   getItems(ev, mn) {
     console.log(this.molId);
 
-     this.items = [];
-     let val = ev.target.value;
- 
-     // if the value is an empty string don't filter the items
-     if (val && val.trim() != '') {
-
-     // debugger
-      if (mn.name == "BUNK_ID")
-      {
-        this.items = this.bunkService.getResults(val)
-
-        if (this.items.length > 0)
-        {
-          this.showBunks = true;
-        }
-        else
-        {
-          this.showBunks = false;
-        }
-      }
-      else if (mn.name == "BUNKTOV_DEPT_ID")
-      {
-        this.items = [
-          {
-            id: 1,
-            name: "Рыба1"
-          },
-          {
-            id: 2,
-            name: "Кошка1"
-          },
-          {
-            id: 3,
-            name: "Собака1"
-          }
-        ]
-
-        this.items = this.items.filter((item) => {
-          return (item.name.toLowerCase().indexOf(val.toLowerCase()) > -1 || item.name.toLowerCase().indexOf(val.toLowerCase()) > -1);
-        }).map(function(el) {
-            return el;
-        }).slice(0,20); 
-
-
-        if (this.items.length > 0)
-        {
-          this.showBunksTovs = true;
-        }
-        else
-        {
-          this.showBunksTovs = false;
-        }
-      }
-     }
-     else
-     {
-       this.showBunks = false;
-       this.showBunksTovs = false;
-     }
+  
+      
    }
  
    onSubmit(f: NgForm) {
@@ -113,11 +56,6 @@ export class PriceFilterPage {
   }
 
    onClear(ev, model) { 
-
-/*     console.log("Модель:" + model.name)
-    this.filter[model.name] = "";
-    console.log(this.filter);
- */
      ev.stopPropagation();
    }
  

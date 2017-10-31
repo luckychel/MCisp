@@ -11,9 +11,8 @@ export class BunkProvider implements IonPickerService  {
   }
 
   getResults(keyword:string){
-   
 
-      return this.api.get("messages/" + molId)
+    /*   return this.api.get("messages/" + molId)
       .then((res) => {
           return res
         });
@@ -22,7 +21,7 @@ export class BunkProvider implements IonPickerService  {
         return (item.name.toLowerCase().indexOf(keyword.toLowerCase()) > -1 || item.name.toLowerCase().indexOf(keyword.toLowerCase()) > -1);
     }).map(function(el) {
         return el;
-    }).slice(0,20); 
+    }).slice(0,20);  */
     
   }
 }
