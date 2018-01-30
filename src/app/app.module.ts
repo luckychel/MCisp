@@ -22,6 +22,7 @@ import { MessagesPage } from '../pages/messages/messages';
 import { MessagePage } from '../pages/message/message';
 import { PricePage } from '../pages/price/price';
 import { PriceFilterPage } from '../pages/price-filter/price-filter';
+import { PriceFilterChoisePage } from '../pages/price-filter-choise/price-filter-choise';
 
 import { ApiProvider } from '../providers/api/api';
 import { DbProvider } from '../providers/db/db';
@@ -35,8 +36,6 @@ import { ToastProvider } from '../providers/toast/toast';
 
 //#region Price
 import { PriceProvider } from '../providers/price/price';
-import { BunkProvider } from '../providers/price/pickers/bunk/bunk';
-import { BunkTovProvider } from '../providers/price/pickers/bunktov/bunktov';
 //#endregion
 
 /* import { MyAppProvider } from '../providers/my-app/my-app'; */
@@ -49,7 +48,8 @@ import { BunkTovProvider } from '../providers/price/pickers/bunktov/bunktov';
     MessagesPage,
     MessagePage,
     PricePage,
-    PriceFilterPage
+    PriceFilterPage,
+    PriceFilterChoisePage
   ],
   imports: [
     BrowserModule,
@@ -67,7 +67,8 @@ import { BunkTovProvider } from '../providers/price/pickers/bunktov/bunktov';
     MessagesPage,
     MessagePage,
     PricePage,
-    PriceFilterPage
+    PriceFilterPage,
+    PriceFilterChoisePage
   ],
   providers: [
     StatusBar,
@@ -87,10 +88,7 @@ import { BunkTovProvider } from '../providers/price/pickers/bunktov/bunktov';
     LoaderProvider,
     AlertProvider,
     ToastProvider,
-    PriceProvider,
-    BunkProvider,
-    BunkTovProvider,
-    
+    PriceProvider
 /*     MyAppProvider */
   ]
 })

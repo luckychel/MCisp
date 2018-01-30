@@ -10,16 +10,24 @@ export class LoaderProvider {
     
   }
 
-  show(){
+  show(text = 'Пожалуйста, подождите...'){
     this.loader = this.loadingCtrl.create({
-      content: 'Пожалуйста подождите...'
+      spinner: 'ios',
+      content: text
     });
     this.loader.present();
+    return this.loader;
   }
 
-  hide(){
-    setTimeout(() => {
+  hide(loader?){
+    if (loader)
+      loader.dismiss();
+    else
+    {
+      setTimeout(() => {
         this.loader.dismiss();
-    });
+      });
+    }
+      
   }
 }

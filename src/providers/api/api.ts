@@ -14,18 +14,20 @@ import { LoginPage } from '../../pages/login/login';
 
 import { DbProvider } from '../../providers/db/db';
 import { ToastProvider } from '../toast/toast';
+import { debounce } from 'ionic-angular/util/util';
 
 @Injectable()
 export class ApiProvider {
-  url: string = 'http://services.ssnab.ru:8010/api'; //http://services2.ssnab.ru:8020/api //http://localhost:60544/api
-  timeOut: number = 10000; //выставляем тайм аут запроса в 10 сек
+  url: string = 'http://services2.ssnab.ru:8020/api'; //    http://localhost:60544/api    http://services.ssnab.ru:8010/api ---- 
+  timeOut: number = 30000; //выставляем тайм аут запроса в 30 сек
     
   constructor(public appCtrl: App, public http: Http, public network: Network, public db: DbProvider, public toastProvider: ToastProvider) {
   }
 
   async get(endpoint: string, params?: any, options?: RequestOptions) : Promise<any> {
 
-    return this.checkNetworkConnection().then(async ()=>{
+    return await this.checkNetworkConnection()
+    .then(async ()=>{
       options =  await this.getOptions(options);
   
       if (params) {
@@ -53,13 +55,11 @@ export class ApiProvider {
     }).catch((err)=>{
       return Promise.reject(err)
     });
-    
-    
   }
 
-  async post(endpoint: string, body: any, options?: RequestOptions) : Promise<any> {
+  async post(endpoint: string, body?: any, options?: RequestOptions) : Promise<any> {
     
-    return this.checkNetworkConnection()
+    return await this.checkNetworkConnection()
     .then(async ()=>{
         options =  await this.getOptions(options);
           return this.http.post(this.url + '/' + endpoint, body, options)
@@ -79,7 +79,6 @@ export class ApiProvider {
     }).catch((err)=>{
       return Promise.reject(err)
     });
-    
   }
 
 /*   async put(endpoint: string, body: any, options?: RequestOptions) {

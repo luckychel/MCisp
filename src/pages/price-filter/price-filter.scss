@@ -1,8 +1,13 @@
 page-price-filter {
-    .sItemList .label {
-        margin:0px;
-    } 
-   .sItemList.item-block {
-        min-height: 2em;       
+    .height67{
+        position: relative;
+        top:25px;
+        height: 67px;
+    }
+    .myinput input {
+        margin-left:0px !important;
+    }
+    .footerToolbar .toolbar-background {
+        background: transparent;
    }
 }

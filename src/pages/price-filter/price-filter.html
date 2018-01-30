@@ -1,47 +1,179 @@
 <ion-header>
   <ion-navbar>
+    <ion-buttons left>
+        <button ion-button icon-only (click)="close()">
+          <ion-icon name="close"></ion-icon>
+        </button>
+    </ion-buttons>
     <ion-title>Расширенный фильтр</ion-title>
+    <ion-buttons right>
+        <button ion-button icon-only (click)="resetFilter()">
+          <span style="color:red;font-size:12px;">Сбросить</span>
+        </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
+<ion-content>
+    <ion-list>
+        <ion-item>
+            <ion-label *ngIf="filter.TOV!==''" color="mygrey" floating>Поиск по ТП</ion-label>
+            <ion-input class="myinput" [(ngModel)]="filter.TOV" (input)="onTovChange()" color="mygrey" type='text' [ngClass]="{'height67': standartTovHeight() }" placeholder="{{filter.TOV==='' ? 'Поиск по ТП' : ''}}"></ion-input>
+            <button ion-button item-right clear (click)='onTovClear($event)' *ngIf="filter.TOV!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <input type="hidden" [(ngModel)]="filter.BUNK_ID" />
+            <ion-label *ngIf="filter.BUNK_NAME!==''" color="mygrey" floating (tap)='onBunkSelect()'>Склад</ion-label>
+            <ion-input class="myinput" color="mygrey" type='text' [(ngModel)]="filter.BUNK_NAME" readonly="true" [ngClass]="{'height67': standartBunkHeight() }" placeholder="{{filter.BUNK_NAME==='' ? 'Склад' : ''}}" (tap)="onBunkSelect()"></ion-input>
+            <button ion-button item-right clear (click)='onBunkClear($event)' *ngIf="filter.BUNK_NAME!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <input type="hidden" [(ngModel)]="filter.BUNKTOV_DEPT_ID" />
+            <ion-label *ngIf="filter.BUNKTOV_DEPT_NAME!==''" color="mygrey" floating (tap)='onBunkTovDeptSelect()'>Отдел</ion-label>
+            <ion-input class="myinput" color="mygrey" type='text' [(ngModel)]="filter.BUNKTOV_DEPT_NAME" readonly="true" [ngClass]="{'height67': standartBunkTovDeptHeight() }" placeholder="{{filter.BUNKTOV_DEPT_NAME==='' ? 'Отдел' : ''}}" (tap)="onBunkTovDeptSelect()"></ion-input>
+            <button ion-button item-right clear (click)='onBunkTovDeptClear($event)' *ngIf="filter.BUNKTOV_DEPT_NAME!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <input type="hidden" [(ngModel)]="filter.PLIST_ID" />
+            <ion-label *ngIf="filter.PLIST!==''" color="mygrey" floating (tap)='onPlistSelect()'>Прайс</ion-label>
+            <ion-input class="myinput" color="mygrey" type='text' [(ngModel)]="filter.PLIST" readonly="true" [ngClass]="{'height67': standartPlistHeight() }" placeholder="{{filter.PLIST==='' ? 'Прайс' : ''}}" (tap)='onPlistSelect()'></ion-input>
+            <button ion-button item-right clear (click)='onPlistClear($event)' *ngIf="filter.PLIST!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <input type="hidden" [(ngModel)]="filter.PLIST_LEVEL_ID" />
+            <ion-label *ngIf="filter.PLIST_LEVEL!==''" color="mygrey" floating (tap)='onPlistLevelSelect()'>Прайс Д</ion-label>
+            <ion-input class="myinput" color="mygrey" type='text' [(ngModel)]="filter.PLIST_LEVEL" readonly="true" [ngClass]="{'height67': standartPlistLevelHeight() }" placeholder="{{filter.PLIST_LEVEL==='' ? 'Прайс Д' : ''}}" (tap)='onPlistLevelSelect()'></ion-input>
+            <button ion-button item-right clear (click)='onPlistLevelClear($event)' *ngIf="filter.PLIST_LEVEL!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <input type="hidden" [(ngModel)]="filter.CCY_ID" />
+            <ion-label *ngIf="filter.CCY!==''" color="mygrey" floating (tap)='onCcySelect()'>Валюта</ion-label>
+            <ion-input class="myinput" color="mygrey" type='text' [(ngModel)]="filter.CCY" readonly="true" [ngClass]="{'height67': standartCcyHeight() }" placeholder="{{filter.CCY==='' ? 'Валюта' : ''}}" (tap)='onCcySelect()'></ion-input>
+            <button ion-button item-right clear (click)='onCcyClear($event)' *ngIf="filter.CCY!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <input type="hidden" [(ngModel)]="filter.PAY_TYPE_ID" />
+            <ion-label *ngIf="filter.PAY_TYPE!==''" color="mygrey" floating (tap)='onNewPayTypeSelect()'>Условие</ion-label>
+            <ion-input class="myinput" color="mygrey" type='text' [(ngModel)]="filter.PAY_TYPE" readonly="true" [ngClass]="{'height67': standartNewPayTypeHeight() }" placeholder="{{filter.PAY_TYPE==='' ? 'Условие' : ''}}" (tap)='onNewPayTypeSelect()'></ion-input>
+            <button ion-button item-right clear (click)='onNewPayTypeClear($event)' *ngIf="filter.PAY_TYPE!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <ion-label>НДС</ion-label>
+            <ion-select [(ngModel)]="filter.WITH_NDS" okText="ОК" cancelText="Отмена" (ionChange)="onWithNDSSelect($event)">
+                <ion-option value="true">Да</ion-option>
+                <ion-option value="false">Нет</ion-option>
+            </ion-select>
+            <button ion-button item-right clear (click)='onWithNDSClear($event)' *ngIf="filter.WITH_NDS!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <input type="hidden" [(ngModel)]="filter.TOV_CCY_ID" />
+            <ion-label *ngIf="filter.TOV_CCY!==''" color="mygrey" floating (tap)='onCcyTovSelect()'>Валюта ТП</ion-label>
+            <ion-input class="myinput" color="mygrey" type='text' [(ngModel)]="filter.TOV_CCY" readonly="true" [ngClass]="{'height67': standartCcyTovHeight() }" placeholder="{{filter.TOV_CCY==='' ? 'Валюта ТП' : ''}}" (tap)='onCcyTovSelect()'></ion-input>
+            <button ion-button item-right clear (click)='onCcyTovClear($event)' *ngIf="filter.TOV_CCY!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <ion-label>Категории ТП</ion-label>
+            <ion-select [(ngModel)]="filter.TOV_CATEGORY_ID" multiple="true" okText="ОК" cancelText="Отмена" (ionChange)="onTovsCategoriesSelect($event)">
+                <ion-option *ngFor="let item of tovsCategoriesItems" [value]="item.CATEGORY_ID">{{item.NAME}}</ion-option>
+            </ion-select>
+            <button ion-button item-right clear (click)='onTovsCategoriesClear($event)' *ngIf="filter.TOV_CATEGORY_ID.length>0" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <ion-label>Отрасли</ion-label>
+            <ion-select [(ngModel)]="filter.SECTOR_ID" multiple="true" okText="ОК" cancelText="Отмена" (ionChange)="onSectorsSelect($event)">
+                <ion-option *ngFor="let item of sectorsItems" [value]="item.SALE_DIRECTION_ID">{{item.NAME}}</ion-option>
+            </ion-select>
+            <button ion-button item-right clear (click)='onSectorsClear($event)' *ngIf="filter.SECTOR_ID.length>0" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <ion-label>Дополнительно</ion-label>
+            <ion-select [(ngModel)]="filter.EXTRA" okText="ОК" cancelText="Отмена" (ionChange)="onExtraSelect($event)">
+                <ion-option *ngFor="let item of extraItems" [value]="item.EXTRA_ID">{{item.NAME}}</ion-option>
+            </ion-select>
+            <button ion-button item-right clear (click)='onExtraClear($event)' *ngIf="filter.EXTRA!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <input type="hidden" [(ngModel)]="filter.TOV_ID" />
+            <ion-label *ngIf="filter.TOV_NAME!==''" color="mygrey" floating (tap)='onTovIdSelect()'>ТП</ion-label>
+            <ion-input class="myinput" color="mygrey" type='text' [(ngModel)]="filter.TOV_NAME" readonly="true" [ngClass]="{'height67': standartTovIdHeight() }" placeholder="{{filter.TOV_NAME==='' ? 'ТП' : ''}}" (tap)='onTovIdSelect()'></ion-input>
+            <button ion-button item-right clear (click)='onTovIdClear($event)' *ngIf="filter.TOV_NAME!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <input type="hidden" [(ngModel)]="filter.TOV_GROUP_ID" />
+            <ion-label *ngIf="filter.TOV_GROUP!==''" color="mygrey" floating (tap)='onTovsGroupSelect()'>ТПГ</ion-label>
+            <ion-input class="myinput" color="mygrey" type='text' [(ngModel)]="filter.TOV_GROUP" readonly="true" [ngClass]="{'height67': standartTovsGroupHeight() }" placeholder="{{filter.TOV_GROUP==='' ? 'ТПГ' : ''}}" (tap)='onTovsGroupSelect()'></ion-input>
+            <button ion-button item-right clear (click)='onTovsGroupClear($event)' *ngIf="filter.TOV_GROUP!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <input type="hidden" [(ngModel)]="filter.PRODUCT_ID" />
+            <ion-label *ngIf="filter.PRODUCT!==''" color="mygrey" floating (tap)='onProductSelect()'>ВГП</ion-label>
+            <ion-input class="myinput" color="mygrey" type='text' [(ngModel)]="filter.PRODUCT" readonly="true" [ngClass]="{'height67': standartProductHeight() }" placeholder="{{filter.PRODUCT==='' ? 'ВГП' : ''}}" (tap)='onProductSelect()'></ion-input>
+            <button ion-button item-right clear (click)='onProductClear($event)' *ngIf="filter.PRODUCT!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <input type="hidden" [(ngModel)]="filter.TOV_PRODUCT_ID" />
+            <ion-label *ngIf="filter.TOV_PRODUCT!==''" color="mygrey" floating (tap)='onTovsProductSelect()'>ТПР</ion-label>
+            <ion-input class="myinput" color="mygrey" type='text' [(ngModel)]="filter.TOV_PRODUCT" readonly="true" [ngClass]="{'height67': standartTovsProductHeight() }" placeholder="{{filter.TOV_PRODUCT==='' ? 'ТПР' : ''}}" (tap)='onTovsProductSelect()'></ion-input>
+            <button ion-button item-right clear (click)='onTovsProductClear($event)' *ngIf="filter.TOV_PRODUCT!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item>
+            <ion-label>Индикатор</ion-label>
+            <ion-select [(ngModel)]="filter.SIGNAL_ID" okText="ОК" cancelText="Отмена" (ionChange)="onSignalSelect($event)">
+                <ion-option *ngFor="let item of signaltems" [value]="item.SIGNAL_ID">{{item.NAME}}</ion-option>
+            </ion-select>
+            <button ion-button item-right clear (click)='onSignalClear($event)' *ngIf="filter.SIGNAL_ID!==''" >
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-item>
 
-<ion-content padding>
-    <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
-        <input name="first" ngModel required #first="ngModel">
-        <input name="last" ngModel #last="ngModel">
-        
-        <ion-grid>
-          <ion-row>
-            <ion-col col-12 style="position:relative;">
-              <input type="hidden" [(ngModel)]="filter.BUNK_ID" name="BUNK_ID" #BUNK_ID="ngModel">
-              <ion-searchbar [(ngModel)]="filter.BUNK" name="BUNK" (input)="getItems($event, BUNK_ID)" (ionClear)="onClear($event, BUNK_ID)" [showCancelButton]="false" [debounce]="500" placeholder="Склад"></ion-searchbar>
-              <ion-list *ngIf="showBunks" style="width:100%;position:absolute;z-index: 1; border: 1px solid #dedede; margin-top:-5px;">
-                <ion-item *ngFor="let item of items" class="sItemList" (click)="clickItem(item, BUNK_ID);" style="border-bottom: 1px solid #D0050B;"> 
-                    <span style="display:none;">{{item.id}}</span><span>{{item.name}}</span>
-                </ion-item>
-              </ion-list>
-            </ion-col>
-          </ion-row>
+      </ion-list>
 
-          <ion-row>
-            <ion-col col-12 style="position:relative;padding:0px;">
-              <input type="hidden" [(ngModel)]="filter.BUNKTOV_DEPT_ID" name="BUNKTOV_DEPT_ID" #BUNKTOV_DEPT_ID="ngModel">
-              <ion-searchbar [(ngModel)]="filter.BUNKTOV_DEPT" name="BUNKTOV_DEPT" (input)="getItems($event, BUNKTOV_DEPT_ID)" (ionClear)="onClear($event, BUNKTOV_DEPT_ID)" [showCancelButton]="false" [debounce]="500" placeholder="Отдел"></ion-searchbar>
-              <ion-list *ngIf="showBunksTovs" style="width:100%;position:absolute;z-index: 1; border: 1px solid #dedede; margin-top:-5px;">
-                <ion-item *ngFor="let item of items" class="sItemList" (click)="clickItem(item, BUNKTOV_DEPT_ID);" style="border-bottom: 1px solid #D0050B;"> 
-                    <span style="display:none;">{{item.id}}</span><span>{{item.name}}</span>
-                </ion-item>
-              </ion-list>
-            </ion-col>
-          </ion-row>
 
-          <ion-row justify-content-between>
-              <ion-col col-12 style="text-align:right">
-                  <button type="submit" ion-button color="primary">Применить</button>    
-                  <button type="reset" ion-button color="warning">Очистить</button>
-              </ion-col>
-          </ion-row>
-        </ion-grid>
-      
-    </form>
 </ion-content>
+<ion-footer no-border  >
+  <ion-navbar class="footerToolbar">
+    <button ion-button block item-right icon-left (click)="onSubmit()">
+        <ion-icon ios="ios-find" md="md-find"></ion-icon>
+        {{findText}}
+      </button>
+    </ion-navbar>
+
+</ion-footer>
+<!--
+  <input name="first" ngModel required #first="ngModel">
+  <input name="last" ngModel #last="ngModel"> 
+-->
+<!-- <ion-picker #searchbarBunk [dataProvider]="bunkService" [showResultsFirst]=1 [options]="{ placeholder : 'Склад', id: 'BUNK_ID', name: 'BUNK_NAME' }" (itemSelected) = "onBunkSelected($event)" (itemCleared)="onBunkClear($event)"></ion-picker> -->
+<!-- <ion-picker #searchbarBunkTov [dataProvider]="bunkTovService" [showResultsFirst]=1 [options]="{ placeholder : 'Отдел', id: 'BUNKTOV_DEPT_ID', name: 'BUNKTOV_DEPT_NAME' }" (itemSelected) = "onBunkTovDeptSelected($event)" (itemCleared)="onBunkTovDeptClear($event)"></ion-picker> -->

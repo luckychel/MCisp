@@ -14,7 +14,7 @@
 <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
       pullingIcon="arrow-dropdown"
-      pullingText="Проведи вниз для обновления"
+      pullingText="Тяни вниз для обновления"
       refreshingSpinner="circles"
       refreshingText="Обновляется...">
     </ion-refresher-content>
@@ -29,7 +29,7 @@
       </button>
       
       <ion-item-options side="left" *ngIf="item.d_READ != null">
-          <button ion-button color="success" (click)="setUnread(item, slidingItem)">Не прочтено</button>
+        <button ion-button color="success" (click)="setUnread(item, slidingItem)">Не прочтено</button>
         </ion-item-options>
 
       <ion-item-options side="left" *ngIf="item.d_READ == null">
@@ -42,5 +42,10 @@
 
     </ion-item-sliding>
   </ion-list>
-
+  <ion-infinite-scroll (ionInfinite)="$event.waitFor(doInfinite())">
+    <ion-infinite-scroll-content 
+      loadingSpinner="ios"
+      loadingText="Загрузка данных...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

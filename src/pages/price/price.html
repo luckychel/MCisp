@@ -3,31 +3,83 @@
         <ion-row>
           <ion-col col-2 no-padding>
             <button ion-button clear icon-only menuToggle>
-              <img *ngIf="unread>0" src="assets/img/unread_messages.png" style="position: absolute; top:4px; left:8px; "/>
-              <ion-icon name="menu"></ion-icon>
+              <img *ngIf="unread>0" src="assets/img/unread_messages.png" style="position: absolute; top:8px; left:10px; "/>
+              <ion-icon name="menu" style="color: #424242;"></ion-icon>
             </button>
           </ion-col>
           <ion-col col-8 no-padding>
-              <ion-searchbar no-padding 
-              [(ngModel)]="myInput"
+              <ion-searchbar class="priceSearch" no-padding 
+              [(ngModel)]="filter.TOV"
               [showCancelButton]="shouldShowCancel"
-              (ionInput)="onInput($event)"
-              (ionCancel)="onCancel($event)"
-              placeholder="Поиск...">
+              (ionInput)="onRefresh($event)"
+              placeholder="Поиск по ТП"
+              debounce="1000">
             </ion-searchbar>
           </ion-col>
           <ion-col col-2 no-padding>
             <button ion-button clear icon-only (click)="clickFind($event)">
-              <ion-icon name="options"></ion-icon>
+              <ion-icon name="options" style="color: #424242;"></ion-icon>
             </button>
           </ion-col>
         </ion-row>
       </ion-grid>
-  
-  
 </ion-header>
 
 
-<ion-content padding>
-  Быстрый поиск!
+<ion-content padding class="backGroundGray"> 
+  <div class="priceWelcome" *ngIf="items.length==0">
+    Для получения данных по прайсу, воспользуйтесь строкой поиска или расширенным фильтром
+  </div>
+  <div *ngIf="items.length > 0">
+  <ion-card *ngFor="let item of items" (tap)="showAllInfo(item)">
+    <ion-card-content style="padding-bottom:0px;">
+      <h2>{{ item.TOV }}</h2>
+      <p style="color:#aaaaaa">{{ item.TOV_GROUP }}</p>
+    </ion-card-content>
+    
+    <ion-row>
+      <ion-col style="padding:0 0 0 5px;">
+        <button ion-button icon-left clear small>
+          <ion-icon name="cash"></ion-icon><div>{{ item.PRICE }} {{ item.TOV_CCY_ID }}</div>
+          <ion-note *ngIf="item.PRICE_CHANGE" style="padding-left:5px;"> 
+            <ion-icon *ngIf="item.PRICE_CHANGE > 0" name="arrow-round-up" style="color:red;padding-right:0px;"><span style="font-weight:bold;font-size:13px;padding:0 0 10px 2px;">{{item.PRICE_CHANGE}}</span></ion-icon>
+            <ion-icon *ngIf="item.PRICE_CHANGE < 0" name="arrow-round-down" style="color:green;padding-right:0px;"><span style="font-weight:bold;font-size:13px;padding:0 0 10px 2px;">{{item.PRICE_CHANGE}}</span></ion-icon>   
+          </ion-note>
+        </button>
+      </ion-col>
+      <ion-col style="padding:0px;">
+          <button ion-button icon-left clear small>
+            <ion-note *ngIf="item.Q_BUNK"><ion-icon name="home"></ion-icon>Cклад, кг: {{ item.Q_BUNK }}</ion-note>
+          </button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="item.VISIBLE && item.VISIBLE==1">
+      <ion-col style="padding:0 0 10px 15px;" class="ioncol_margin0">
+        <ion-label>Б.Гр: <span>{{item.BDG_GROUP_ID}}</span></ion-label>
+        <ion-label>НДС <span>{{item.P_NDS}}</span></ion-label>
+        <ion-label>Свободно, кг: <span>{{item.Q_FREE}}</span></ion-label>
+        <ion-label>Бронь, кг: <span>{{item.Q_RESERVED}}</span></ion-label>
+        <ion-label>Резерв, кг: <span>{{item.Q_ORDERED}}</span></ion-label>
+        <ion-label>Скоро, кг: <span>{{item.Q_WAIT}}</span></ion-label>
+        <ion-label>Доля, %: <span>{{item.VAR_PRICE_PART}}</span></ion-label>
+        <ion-label>Транз.срок, дн.: <span>{{item.TIME_TRANZIT}}</span></ion-label>
+      </ion-col>
+      <ion-col style="padding:0 0 10px 0;" class="ioncol_margin0">
+        <ion-label>С/c: <span>{{item.PRICE_COST}}</span></ion-label>
+        <ion-label>Расч. цена: <span>{{item.PRICE_CALC.toFixed(2)}}</span></ion-label>
+        <ion-label>Цена КД: <span>{{item.PRICE_FD}}</span></ion-label>
+        <ion-label>Цена ДФ: <span>{{item.PRICE_DF}}</span></ion-label>
+        <ion-label>Цена (след.): <span>{{item.PRICE_CALC1.toFixed(2)}}</span></ion-label>
+        <ion-label>Тек. кв.: <span>{{item.PRICE_Q1}}</span></ion-label>
+        <ion-label>След. кв.: <span>{{item.PRICE_Q2}}</span></ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+  </div>
+    <ion-infinite-scroll (ionInfinite)="$event.waitFor(doInfinite())">
+      <ion-infinite-scroll-content 
+        loadingSpinner="ios"
+        loadingText="Загрузка данных...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 </ion-content>

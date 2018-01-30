@@ -1,5 +1,32 @@
 page-price {
+    
     ion-searchbar {
         margin: 0 auto;
+    }
+    .priceSearch .searchbar-input{
+        padding-left: 40px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        padding-right: 0px;
+    }
+    .priceWelcome{
+        padding: 20px;
+        font-size: 18px;
+        text-align: center;
+        color:#858585;
+    }
+    .backGroundGray{
+        background-color:  #f0f0f0;
+    }
+    .backGroundGray .scroll-content {
+        padding: 5px !important;
+    }
+
+    .ioncol_margin0 ion-label {
+        margin:0px;
+    }
+
+    .ioncol_margin0 ion-label span {
+        color:#aaaaaa;
     }
 }

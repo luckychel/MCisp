@@ -7,6 +7,7 @@ import { DbProvider } from '../../providers/db/db';
 import { MessagesProvider } from '../../providers/messages/messages';
 import { LoaderProvider } from '../../providers/loader/loader';
 import { ToastProvider } from '../../providers/toast/toast';
+import { debounce } from 'ionic-angular/util/util';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { ToastProvider } from '../../providers/toast/toast';
 export class MessagesPage {
 
   items: any[] = [];
-  loader: any;
+  items1: any[] = [];
   unread: number = 0;
 
   constructor(public navCtrl: NavController, 
@@ -36,10 +37,12 @@ export class MessagesPage {
     this.messageProvider.getMessages()
       .then((data)=>{
         if (data!== undefined && data.length > 0) {
-          for (let item of data) {
-            /* console.log("Сообщения: " + JSON.stringify(item)); */
+          /* for (let item of data) {
             this.items.push(item);
-          }
+          } */
+          this.items1 = data;
+          this.items = data.slice(0,30);
+
         }
         if (isLoader) this.loaderProvider.hide();
     })
@@ -54,9 +57,27 @@ export class MessagesPage {
     });
   }
 
-  ionViewWillEnter() {
+  doInfinite(): Promise<any> {
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        let len = this.items.length;
+        for (var i = len; i < len + 30 && this.items.length < this.items1.length; i++) {
+          this.items.push(this.items1[i]);
+        }
+        resolve();
+      }, 500);
+    })
+  }
+
+  ionViewWillEnter(){
     this.menuCtrl.enable(true, 'mainmenu');
+  }
+
+  ionViewDidLoad() {
+    //console.log("зашли:" + new Date().toLocaleTimeString())
     this.getData();
+    //console.log("вышли:" + new Date().toLocaleTimeString())
   }
 
    doRefresh(refresher) {
@@ -67,10 +88,9 @@ export class MessagesPage {
   }
 
   openItem(item) {
-    this.setRead(item, undefined).then(()=>{
-      this.navCtrl.push(MessagePage, {
-        item: item
-      });
+    this.setRead(item, undefined);
+    this.navCtrl.push(MessagePage, {
+      item: item
     });
   }
 
@@ -80,16 +100,15 @@ export class MessagesPage {
       slidingItem.close();
     }     
 
-    return this.messageProvider.setRead({HIST_ID: p.hisT_ID})
-    .then((res)=>{
-      for (var i = 0; i< this.items.length; i++) {
-        if (this.items[i]["hisT_ID"] == p.hisT_ID)
-        {
-          this.items[i]["d_READ"] = new Date().getDate();
-          break;  
-        }
+    for (var i = 0; i< this.items.length; i++) {
+      if (this.items[i]["hisT_ID"] == p.hisT_ID)
+      {
+        this.items[i]["d_READ"] = new Date().getDate();
+        break;  
       }
-    })
+    }
+
+    return this.messageProvider.setRead({HIST_ID: p.hisT_ID})
     .then(() => this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;}))
     .catch((err)=>{
       if (err.message) {
@@ -103,17 +122,15 @@ export class MessagesPage {
     if (slidingItem !== undefined) {
       slidingItem.close();
     }     
+    for (var i = 0; i< this.items.length; i++) {
+      if (this.items[i]["hisT_ID"] == p.hisT_ID)
+      {
+        this.items[i]["d_READ"] = null;
+        break;  
+      }
+    }
 
     return this.messageProvider.setUnread({HIST_ID: p.hisT_ID})
-      .then((res)=>{
-          for (var i = 0; i< this.items.length; i++) {
-            if (this.items[i]["hisT_ID"] == p.hisT_ID)
-            {
-              this.items[i]["d_READ"] = null;
-              break;  
-            }
-          }
-      })
       .then(() => this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;}))
       .catch((err)=>{
         if (err.message) {
@@ -132,16 +149,16 @@ export class MessagesPage {
           text: "OK",
           handler: () => {
             slidingItem.close();
+
+            for (var i = 0; i< this.items.length; i++) {
+              if (this.items[i]["hisT_ID"] == p.hisT_ID)
+              {
+                this.items.splice(i, 1);
+                break;  
+              }
+            }
+
             this.messageProvider.setDelete({HIST_ID: p.hisT_ID})
-              .then((res)=>{
-                for (var i = 0; i< this.items.length; i++) {
-                  if (this.items[i]["hisT_ID"] == p.hisT_ID)
-                  {
-                    this.items.splice(i, 1);
-                    break;  
-                  }
-                }
-              })
               .then(() => this.messageProvider.getUnreadCount(true).then((res)=>{this.unread = res;}))
               .catch((err)=>{
                 if (err.message) {
