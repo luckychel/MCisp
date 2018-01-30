@@ -5,7 +5,6 @@ import { PriceFilterPage } from '../price-filter/price-filter';
 import { LoaderProvider } from '../../providers/loader/loader';
 import { MessagesProvider } from '../../providers/messages/messages';
 import { PriceProvider } from '../../providers/price/price';
-import { debounce } from 'ionic-angular/util/util';
 
 @Component({
   selector: 'page-price',

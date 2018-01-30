@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, ViewController } from 'ionic-angular';
 
-import { DbProvider } from '../../providers/db/db';
 import { LoaderProvider } from '../../providers/loader/loader';
 import { PriceFilterChoisePage } from '../price-filter-choise/price-filter-choise';
 import { PriceProvider } from '../../providers/price/price';
@@ -23,7 +22,6 @@ export class PriceFilterPage {
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
-    private db: DbProvider, 
     public priceService: PriceProvider,
     public modalCtrl: ModalController,
     public loadingCtrl: LoaderProvider,

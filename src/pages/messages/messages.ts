@@ -7,8 +7,6 @@ import { DbProvider } from '../../providers/db/db';
 import { MessagesProvider } from '../../providers/messages/messages';
 import { LoaderProvider } from '../../providers/loader/loader';
 import { ToastProvider } from '../../providers/toast/toast';
-import { debounce } from 'ionic-angular/util/util';
-
 
 @Component({
   selector: 'page-messages',

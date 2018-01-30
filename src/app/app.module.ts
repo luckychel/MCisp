@@ -12,7 +12,6 @@ import { Push } from '@ionic-native/push';
 import { HeaderColor } from '@ionic-native/header-color';
 import { Badge } from '@ionic-native/badge';
 import { MomentModule } from 'angular2-moment';
-import { MCispComponentModule } from '../component/mcisp.component.module'
 
 import { MyApp } from './app.component';
 
@@ -56,8 +55,7 @@ import { PriceProvider } from '../providers/price/price';
     HttpModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    MomentModule,
-    MCispComponentModule
+    MomentModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

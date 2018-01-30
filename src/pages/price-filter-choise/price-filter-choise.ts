@@ -1,5 +1,5 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { NavController, NavParams, ViewController, AlertController} from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, NavParams, ViewController} from 'ionic-angular';
 /* import { debounce } from 'rxjs/operator/debounce'; */
 import { PriceProvider } from '../../providers/price/price';
 import { LoaderProvider } from '../../providers/loader/loader';

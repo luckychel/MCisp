@@ -14,7 +14,6 @@ import { LoginPage } from '../../pages/login/login';
 
 import { DbProvider } from '../../providers/db/db';
 import { ToastProvider } from '../toast/toast';
-import { debounce } from 'ionic-angular/util/util';
 
 @Injectable()
 export class ApiProvider {
