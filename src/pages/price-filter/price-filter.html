@@ -14,7 +14,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content class="content">
+<ion-content class="content" #content>
     <ion-list>
         <ion-item>
             <ion-label *ngIf="filter.TOV!==''" color="mygrey" floating>Поиск по ТП</ion-label>
@@ -162,15 +162,16 @@
 
 
 </ion-content>
-<ion-footer no-border  >
-  <ion-navbar class="footerToolbar">
+
+<ion-footer no-border [keyboardAttach]="content" >
+  <ion-toolbar class="footerToolbar">
     <button ion-button block item-right icon-left (click)="onSubmit()">
         <ion-icon ios="ios-find" md="md-find"></ion-icon>
         {{findText}}
       </button>
-    </ion-navbar>
-
+    </ion-toolbar>
 </ion-footer>
+
 <!--
   <input name="first" ngModel required #first="ngModel">
   <input name="last" ngModel #last="ngModel"> 

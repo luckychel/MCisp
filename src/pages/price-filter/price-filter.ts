@@ -9,6 +9,7 @@ import { PriceProvider } from '../../providers/price/price';
   selector: 'page-price-filter',
   templateUrl: 'price-filter.html',
 })
+
 export class PriceFilterPage {
   items: any;
   filter: any;
@@ -35,6 +36,7 @@ export class PriceFilterPage {
     this.sectorsItems = [];
     this.extraItems = [];
     this.signaltems = [];
+
   }
   
 /*   popView(){
@@ -326,7 +328,7 @@ getSignals():Promise<any>{
 
   //поиск по прайс листу
   getPlist():Promise<any>{
-    let loading = this.loadingCtrl.show('Загрузка прайс листа...');
+    //let loading = this.loadingCtrl.show('Загрузка прайс листа...');
     
     this.findText = "Ищем...";
     //debugger;
@@ -347,10 +349,10 @@ getSignals():Promise<any>{
             }
           }
         }
-        this.loadingCtrl.hide(loading);
+        //if (loading) this.loadingCtrl.hide(loading);
         Promise.resolve();
       }).catch((err)=>{
-        this.loadingCtrl.hide(loading);
+        //if (loading) this.loadingCtrl.hide(loading);
         Promise.reject(err.message);
       });
   }
@@ -370,7 +372,7 @@ getSignals():Promise<any>{
     if (this.filterTextTimeout) clearTimeout(this.filterTextTimeout);
       this.filterTextTimeout = setTimeout(() => {
       this.getPlist();
-    }, 1000); // delay 1000 ms
+    }, 500); // delay 500 ms
   }
 
   onTovClear(ev) { 

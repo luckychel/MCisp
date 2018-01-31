@@ -3,6 +3,7 @@ import { Nav, Platform, Events } from 'ionic-angular';
 
 import { AppVersion } from '@ionic-native/app-version';
 import { StatusBar } from '@ionic-native/status-bar';
+
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HeaderColor } from '@ionic-native/header-color';
 import { Network } from '@ionic-native/network';

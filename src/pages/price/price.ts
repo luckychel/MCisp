@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Platform, NavController, NavParams, MenuController, ModalController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { Platform, NavController, NavParams, MenuController, ModalController, Searchbar } from 'ionic-angular';
 import { PriceFilterPage } from '../price-filter/price-filter';
 
 import { LoaderProvider } from '../../providers/loader/loader';
@@ -15,6 +15,7 @@ export class PricePage {
   items: any;
   filter: any;
   args: any;
+  @ViewChild('searchBar') searchbar: Searchbar;
 
   constructor(public platform: Platform,
     public navCtrl: NavController, 
@@ -112,12 +113,14 @@ export class PricePage {
 
   }
 
-  async onRefresh(ev){
+  async onRefresh(ev, clear){
+    if (clear) this.filter.TOV = '';
     this.items = [];
     let nf = new PriceProvider().args;
     this.args = nf;
     await this.getPlistData(false);
     nf = null;
+    this.searchbar.setFocus();
   }
 
   showAllInfo(tov)

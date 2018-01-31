@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, ViewController} from 'ionic-angular';
+import { NavController, NavParams, ViewController, Searchbar} from 'ionic-angular';
 /* import { debounce } from 'rxjs/operator/debounce'; */
 import { PriceProvider } from '../../providers/price/price';
 import { LoaderProvider } from '../../providers/loader/loader';
@@ -10,7 +10,7 @@ import { LoaderProvider } from '../../providers/loader/loader';
 })
 
 export class PriceFilterChoisePage {
-  @ViewChild('searchBar') myInput ;
+  @ViewChild('searchBar') searchbar: Searchbar;
   key: string;
   keyText: string;
   filter: any;
@@ -34,7 +34,8 @@ export class PriceFilterChoisePage {
 
   //синхронность нужна только чтобы запустить метод getItems
   async ionViewDidLoad() {
-    this.loadingCtrl.show();
+    let loader = this.loadingCtrl.show();
+
     if (this.key == 'BUNK_ID') {
       this.data = await this.getBunk({Search: null, PlistId: null, BunkId: null})
     }
@@ -70,11 +71,11 @@ export class PriceFilterChoisePage {
     }
 
     this.getItems();
-    setTimeout(() => {
-      this.myInput.setFocus();
-    },500);
+    this.loadingCtrl.hide(loader);
 
-    this.loadingCtrl.hide();
+    setTimeout(() => {
+      this.searchbar.initFocus();
+    },500);
   }
 
   //получение складов
