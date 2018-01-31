@@ -8,6 +8,7 @@ import { AppVersion } from '@ionic-native/app-version';
 import { Network } from '@ionic-native/network';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { Keyboard } from '@ionic-native/keyboard';
 import { Push } from '@ionic-native/push';
 import { HeaderColor } from '@ionic-native/header-color';
 import { Badge } from '@ionic-native/badge';
@@ -37,7 +38,7 @@ import { ToastProvider } from '../providers/toast/toast';
 import { PriceProvider } from '../providers/price/price';
 //#endregion
 
-/* import { MyAppProvider } from '../providers/my-app/my-app'; */
+import { DirectivesModule } from '../directives/directives.module'; 
 
 @NgModule({
   declarations: [
@@ -53,9 +54,10 @@ import { PriceProvider } from '../providers/price/price';
   imports: [
     BrowserModule,
     HttpModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, { scrollAssist: false }),
     IonicStorageModule.forRoot(),
-    MomentModule
+    MomentModule,
+    DirectivesModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -70,6 +72,7 @@ import { PriceProvider } from '../providers/price/price';
   ],
   providers: [
     StatusBar,
+    Keyboard,
     SplashScreen,
     AppVersion,
     Network,

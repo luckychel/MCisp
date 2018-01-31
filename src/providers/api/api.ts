@@ -17,7 +17,7 @@ import { ToastProvider } from '../toast/toast';
 
 @Injectable()
 export class ApiProvider {
-  url: string = 'http://services.ssnab.ru:8010/api'; //    http://localhost:60544/api    http://services2.ssnab.ru:8020/api ---- 
+  url: string = 'http://services2.ssnab.ru:8020/api'; //    http://localhost:60544/api    http://services2.ssnab.ru:8020/api ---- 
   timeOut: number = 30000; //выставляем тайм аут запроса в 30 сек
     
   constructor(public appCtrl: App, public http: Http, public network: Network, public db: DbProvider, public toastProvider: ToastProvider) {

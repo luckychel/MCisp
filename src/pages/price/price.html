@@ -12,8 +12,10 @@
               [(ngModel)]="filter.TOV"
               [showCancelButton]="shouldShowCancel"
               (ionInput)="onRefresh($event)"
+              (ionClear)="onRefresh($event, true)"
               placeholder="Поиск по ТП"
-              debounce="1000">
+              debounce="500"
+              #searchBar>
             </ion-searchbar>
           </ion-col>
           <ion-col col-2 no-padding>
