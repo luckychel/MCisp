@@ -10,4 +10,11 @@ page-price-filter {
     .footerToolbar .toolbar-background {
         background: transparent;
    }
+   .input-cover{
+        display: none;
+   }
+   .content ion-icon[name="close"]{
+        font-size:30px;
+   }
 }
+

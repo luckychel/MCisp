@@ -21,12 +21,14 @@ page-price {
     .backGroundGray .scroll-content {
         padding: 5px !important;
     }
-
     .ioncol_margin0 ion-label {
         margin:0px;
     }
 
     .ioncol_margin0 ion-label span {
         color:#aaaaaa;
+    }
+    ion-searchbar.searchbar-ios {
+        background-color:  #f0f0f0;
     }
 }

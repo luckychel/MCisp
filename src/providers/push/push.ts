@@ -44,7 +44,7 @@ export class PushProvider {
       if (res.isEnabled) {
         const options: PushOptions = {
           android: {
-              //senderID: '74408042527', 
+              senderID: '74408042527',
               sound: 'true'
           },
           ios: {
