@@ -54,7 +54,7 @@ import { DirectivesModule } from '../directives/directives.module';
   imports: [
     BrowserModule,
     HttpModule,
-    IonicModule.forRoot(MyApp, { scrollAssist: false }),
+    IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
     MomentModule,
     DirectivesModule
