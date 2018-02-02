@@ -15,6 +15,8 @@ export class PricePage {
   items: any;
   filter: any;
   args: any;
+  spinner: boolean = false;
+
   @ViewChild('searchBar') searchbar: Searchbar;
 
   constructor(public platform: Platform,
@@ -25,7 +27,7 @@ export class PricePage {
     public messagesProvider: MessagesProvider,
     public loadingCtrl: LoaderProvider,
     public modalCtrl: ModalController) {
-
+      
       this.filter = this.priceService.filter;
       this.args = this.priceService.args;
       this.items = [];
@@ -43,7 +45,7 @@ export class PricePage {
 
   //список фильров по умолчанию
   ionViewDidLoad(){
-    this.getPlistData();
+    this.getPlistData(true, true);
   }
 
   async getPlistData(dflt = true, showLoader = true){
@@ -65,7 +67,8 @@ export class PricePage {
       this.filter.CCY_ID = dfilter.CCY_ID;
       this.filter.PAY_TYPE_ID = dfilter.PAY_TYPE_ID;
     }
-    return await this.priceService.getPlistData(this.filter, this.args, showLoader)
+    if (showLoader) this.spinner = true;
+    return await this.priceService.getPlistData(this.filter, this.args, false)
       .then((res) => {
         if (res)
         {
@@ -75,6 +78,9 @@ export class PricePage {
           }
           this.args = res.args;
         }
+        if (showLoader) this.spinner = false;
+      }).catch(()=>{
+        if (showLoader) this.spinner = false;
       });
   }
   
@@ -105,7 +111,7 @@ export class PricePage {
         let nf = new PriceProvider().args;
         this.args = nf;
         this.filter = data;
-        this.getPlistData(false);
+        this.getPlistData(false, true);
         nf = null;
       }
     });
@@ -118,7 +124,7 @@ export class PricePage {
     this.items = [];
     let nf = new PriceProvider().args;
     this.args = nf;
-    await this.getPlistData(false);
+    await this.getPlistData(false, true);
     nf = null;
     this.searchbar.setFocus();
   }

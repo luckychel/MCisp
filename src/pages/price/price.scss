@@ -9,7 +9,14 @@ page-price {
         padding-bottom: 6px;
         padding-right: 0px;
     }
+    ion-spinner{
+        position: absolute;
+        left:45%;
+        top:20%;
+    }
     .priceWelcome{
+        position: absolute;
+        top:25%;
         padding: 20px;
         font-size: 18px;
         text-align: center;

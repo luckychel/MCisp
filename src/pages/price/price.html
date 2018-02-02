@@ -29,6 +29,8 @@
 
 
 <ion-content padding class="backGroundGray"> 
+
+  <ion-spinner name="ios" *ngIf="spinner==1"></ion-spinner>
   <div class="priceWelcome" *ngIf="items.length==0">
     Для получения данных по прайсу, воспользуйтесь строкой поиска или расширенным фильтром
   </div>
