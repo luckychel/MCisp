@@ -58,7 +58,7 @@
     </ion-row>
     <ion-row *ngIf="item.VISIBLE && item.VISIBLE==1">
       <ion-col style="padding:0 0 10px 15px;" class="ioncol_margin0">
-        <ion-label>Валюта ТП: <span>item.TOV_CCY_ID</span></ion-label>
+        <ion-label>Валюта ТП: <span>{{item.TOV_CCY_ID}}</span></ion-label>
         <ion-label>НДС: <span>{{item.P_NDS}}</span></ion-label>
         <ion-label>Свободно, кг: <span>{{item.Q_FREE}}</span></ion-label>
         <ion-label>Бронь, кг: <span>{{item.Q_RESERVED}}</span></ion-label>
