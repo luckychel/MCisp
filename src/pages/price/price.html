@@ -27,7 +27,6 @@
       </ion-grid>
 </ion-header>
 
-
 <ion-content padding class="backGroundGray"> 
 
   <ion-spinner class="priceSpinner" name="ios" *ngIf="spinner==1"></ion-spinner>
@@ -44,7 +43,7 @@
     <ion-row>
       <ion-col style="padding:0 0 0 5px;">
         <button ion-button icon-left clear small>
-          <ion-icon name="cash"></ion-icon><div>{{ item.PRICE }} {{ item.TOV_CCY_ID }}</div>
+          <ion-icon name="cash"></ion-icon><div>{{ item.PRICE }} {{ filter.CCY_ID }}</div>
           <ion-note *ngIf="item.PRICE_CHANGE" style="padding-left:5px;"> 
             <ion-icon *ngIf="item.PRICE_CHANGE > 0" name="arrow-round-up" style="color:red;padding-right:0px;"><span style="font-weight:bold;font-size:13px;padding:0 0 10px 2px;">{{item.PRICE_CHANGE}}</span></ion-icon>
             <ion-icon *ngIf="item.PRICE_CHANGE < 0" name="arrow-round-down" style="color:green;padding-right:0px;"><span style="font-weight:bold;font-size:13px;padding:0 0 10px 2px;">{{item.PRICE_CHANGE}}</span></ion-icon>   
@@ -59,8 +58,8 @@
     </ion-row>
     <ion-row *ngIf="item.VISIBLE && item.VISIBLE==1">
       <ion-col style="padding:0 0 10px 15px;" class="ioncol_margin0">
-        <ion-label>Б.Гр: <span>{{item.BDG_GROUP_ID}}</span></ion-label>
-        <ion-label>НДС <span>{{item.P_NDS}}</span></ion-label>
+        <ion-label>Валюта ТП: <span>item.TOV_CCY_ID</span></ion-label>
+        <ion-label>НДС: <span>{{item.P_NDS}}</span></ion-label>
         <ion-label>Свободно, кг: <span>{{item.Q_FREE}}</span></ion-label>
         <ion-label>Бронь, кг: <span>{{item.Q_RESERVED}}</span></ion-label>
         <ion-label>Резерв, кг: <span>{{item.Q_ORDERED}}</span></ion-label>
@@ -69,6 +68,7 @@
         <ion-label>Транз.срок, дн.: <span>{{item.TIME_TRANZIT}}</span></ion-label>
       </ion-col>
       <ion-col style="padding:0 0 10px 0;" class="ioncol_margin0">
+        <ion-label>Б.Гр: <span>{{item.BDG_GROUP_ID}}</span></ion-label>
         <ion-label>С/c: <span>{{item.PRICE_COST}}</span></ion-label>
         <ion-label>Расч. цена: <span>{{item.PRICE_CALC.toFixed(2)}}</span></ion-label>
         <ion-label>Цена КД: <span>{{item.PRICE_FD}}</span></ion-label>
