@@ -34,10 +34,10 @@
     Для получения данных по прайсу, воспользуйтесь строкой поиска или расширенным фильтром
   </div>
   <div *ngIf="items.length > 0">
-  <ion-card *ngFor="let item of items" (tap)="showAllInfo(item)">
+  <ion-card *ngFor="let item of items; let i = index" tappable (click)="showAllInfo(item, i)">
     <ion-card-content style="padding-bottom:0px;">
       <h2>{{ item.TOV }}</h2>
-      <p style="color:#aaaaaa">{{ item.TOV_GROUP }}</p>
+      <p class="colorGray">{{ item.TOV_GROUP }}</p>
     </ion-card-content>
     
     <ion-row>
@@ -70,12 +70,18 @@
       <ion-col style="padding:0 0 10px 0;" class="ioncol_margin0">
         <ion-label>Б.Гр: <span>{{item.BDG_GROUP_ID}}</span></ion-label>
         <ion-label>С/c: <span>{{item.PRICE_COST}}</span></ion-label>
-        <ion-label>Расч. цена: <span>{{item.PRICE_CALC.toFixed(2)}}</span></ion-label>
+        <ion-label>Расч. цена: <span>{{item.PRICE_CALC ? item.PRICE_CALC.toFixed(2) : ""}}</span></ion-label>
         <ion-label>Цена КД: <span>{{item.PRICE_FD}}</span></ion-label>
         <ion-label>Цена ДФ: <span>{{item.PRICE_DF}}</span></ion-label>
-        <ion-label>Цена (след.): <span>{{item.PRICE_CALC1.toFixed(2)}}</span></ion-label>
+        <ion-label>Цена (след.): <span>{{item.PRICE_CALC1 ? item.PRICE_CALC1.toFixed(2) : ""}}</span></ion-label>
         <ion-label>Тек. кв.: <span>{{item.PRICE_Q1}}</span></ion-label>
         <ion-label>След. кв.: <span>{{item.PRICE_Q2}}</span></ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col text-center style="padding:0;height:10px !important;">
+        <ion-icon *ngIf="!item.VISIBLE" md="md-arrow-dropdown" class="colorGray"></ion-icon>
+        <ion-icon *ngIf="item.VISIBLE && item.VISIBLE==1" md="md-arrow-dropup" class="colorGray"></ion-icon>
       </ion-col>
     </ion-row>
   </ion-card>

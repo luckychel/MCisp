@@ -129,11 +129,11 @@ export class PricePage {
     this.searchbar.setFocus();
   }
 
-  showAllInfo(tov)
+  showAllInfo(item, i)
   {
-    if (tov.VISIBLE)
-      tov.VISIBLE = !tov.VISIBLE;
+    if (item.VISIBLE)
+      item.VISIBLE = !item.VISIBLE;
     else
-      tov.VISIBLE = 1;
+      item.VISIBLE = 1;
   }
 }
