@@ -80,7 +80,6 @@ export class PriceFilterPage {
           });
     }).catch((err)=>{
         this.loadingCtrl.hide(loading);
-        alert(err.message)
     });
   }
   

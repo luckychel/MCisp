@@ -58,7 +58,6 @@ export class PricePage {
           return dfilter;
       }).catch((err)=>{
           this.loadingCtrl.hide(loader);
-          alert(err.message)
       });
 
       this.filter.BUNK_ID = dfilter.BUNK_ID;
