@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, ViewController } from 'ionic-angular';
 
 import { LoaderProvider } from '../../providers/loader/loader';
-import { PriceFilterChoisePage } from '../price-filter-choise/price-filter-choise';
+import { PriceFilterChoicePage } from '../price-filter-choice/price-filter-choice';
 import { PriceProvider } from '../../providers/price/price';
 
 @Component({
@@ -627,7 +627,7 @@ onSignalClear(){
 
 //показ модальной формы с фильтром
   showModalView(key, keyText){
-    let profileModal = this.modalCtrl.create(PriceFilterChoisePage, {
+    let profileModal = this.modalCtrl.create(PriceFilterChoicePage, {
       key: key,
       keyText: keyText,
       filter: this.filter

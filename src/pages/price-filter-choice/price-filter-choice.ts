@@ -5,11 +5,11 @@ import { PriceProvider } from '../../providers/price/price';
 import { LoaderProvider } from '../../providers/loader/loader';
 
 @Component({
-  selector: 'page-price-filter-choise',
-  templateUrl: 'price-filter-choise.html',
+  selector: 'page-price-filter-choice',
+  templateUrl: 'price-filter-choice.html',
 })
 
-export class PriceFilterChoisePage {
+export class PriceFilterChoicePage {
   @ViewChild('searchBar') searchbar: Searchbar;
   key: string;
   keyText: string;

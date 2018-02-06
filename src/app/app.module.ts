@@ -22,7 +22,7 @@ import { MessagesPage } from '../pages/messages/messages';
 import { MessagePage } from '../pages/message/message';
 import { PricePage } from '../pages/price/price';
 import { PriceFilterPage } from '../pages/price-filter/price-filter';
-import { PriceFilterChoisePage } from '../pages/price-filter-choise/price-filter-choise';
+import { PriceFilterChoicePage } from '../pages/price-filter-choice/price-filter-choice';
 
 import { ApiProvider } from '../providers/api/api';
 import { DbProvider } from '../providers/db/db';
@@ -49,7 +49,7 @@ import { DirectivesModule } from '../directives/directives.module';
     MessagePage,
     PricePage,
     PriceFilterPage,
-    PriceFilterChoisePage
+    PriceFilterChoicePage
   ],
   imports: [
     BrowserModule,
@@ -68,7 +68,7 @@ import { DirectivesModule } from '../directives/directives.module';
     MessagePage,
     PricePage,
     PriceFilterPage,
-    PriceFilterChoisePage
+    PriceFilterChoicePage
   ],
   providers: [
     StatusBar,
